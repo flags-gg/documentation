@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: flags-gg
+  name: docs
+  labels:
+    name: docs
+    app: docs
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 3
+  selector:
+    matchLabels:
+      app: docs
+      name: docs
+  template:
+    metadata:
+      labels:
+        app: docs
+        name: docs
+    spec:
+      containers:
+        - name: docs
+          image: containers.chewed-k8s.net/flags-gg/docs:latest
+          imagePullPolicy: always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+      imagePullSecrets:
+        - name: docker-registry-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docs
+  namespace: flags-gg
+  labels:
+    app: docs
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: docs
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docs
+  namespace: flags-gg
+  annotations:
+    cert-manager.io/cluster-issuer: live-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    name: docs
+    app: docs
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - docs.flags.gg
+      secretName: docs-tls
+  rules:
+    - host: docs.flags.gg
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docs
+                port:
+                  number: 80
+
