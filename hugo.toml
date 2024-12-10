@@ -10,7 +10,6 @@ disable = false
 ignoreConfig = false
 
 [params]
-editURL = 'https://github.com/Flags-gg/docs/edit/main/content/${FilePath}'
 description = 'Flags.gg Documentation'
 author = 'Flags.gg'
 showVisitedLinks = true
