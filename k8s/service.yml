@@ -27,7 +27,7 @@ spec:
       containers:
         - name: docs
           image: containers.chewed-k8s.net/flags-gg/docs:latest
-          imagePullPolicy: always
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               protocol: TCP
@@ -79,4 +79,3 @@ spec:
                 name: docs
                 port:
                   number: 80
-
