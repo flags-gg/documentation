@@ -48,7 +48,7 @@ const App = () => {
 };
 ```
 
-this will now allow you to use the flags.gg SDK in your nextjs app and any flags that have been set in the platform
+this will now allow you to use the flags.gg SDK in your next.js app and any flags that have been set in the platform
 
 ## Usage
 

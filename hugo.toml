@@ -13,6 +13,9 @@ ignoreConfig = false
 description = 'Flags.gg Documentation'
 author = 'Flags.gg'
 showVisitedLinks = true
+linkTitle = 'Flags.gg'
 
 [outputs]
 home = ['HTML', 'RSS', 'JSON']
+section = ['HTML', 'RSS', 'JSON']
+page = ['HTML', 'RSS', 'JSON']
