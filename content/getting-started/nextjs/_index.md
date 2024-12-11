@@ -1,11 +1,11 @@
 +++
 description = "Next.js starter"
 draft = false
-title = 'Nextjs'
+title = 'Next.js'
 categories = ["tutorial", "nextjs"]
 +++
 
-Here's how to get started with flags.gg in nextjs.
+Here's how to get started with flags.gg in next.js.
 
 ## Installation
 
