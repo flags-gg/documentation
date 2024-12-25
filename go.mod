@@ -2,4 +2,8 @@ module github.com/flags-gg/documentation
 
 go 1.23.4
 
-require github.com/McShelby/hugo-theme-relearn v0.0.0-20241210183303-16d4de84becf // indirect
+require (
+	github.com/colinwilson/lotusdocs v0.1.0 // indirect
+	github.com/gohugoio/hugo-mod-bootstrap-scss/v5 v5.20300.20200 // indirect
+	github.com/imfing/hextra v0.9.0 // indirect
+)

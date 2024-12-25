@@ -1,6 +1,6 @@
-+++
-title = ""
-type = "home"
-+++
+---
+title: Flags.gg
+layout: hextra-home
+---
 
-This is a short guide on how to setup flags.gg on your project.
+This is some basic docs for the flags.gg module

@@ -1,17 +1,18 @@
-+++
-description = "Next.js starter"
-draft = false
-title = 'Next.js'
-categories = ["tutorial", "nextjs"]
-+++
+---
+description: "Next.js starter"
+draft: false
+title: 'Next.js'
+categories: ["tutorial", "nextjs"]
+linkTitle: "Next.js"
+---
 
 Here's how to get started with flags.gg in next.js.
 
 ## Installation
 
-```bash npm2yarn
-npm install @flags-gg/nextjs-library
-```
+{{< install-toggle copy="true" >}}
+@flags-gg/react-library
+{{< /install-toggle >}}
 
 ## src/app/layout.tsx
 

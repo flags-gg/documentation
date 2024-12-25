@@ -8,9 +8,9 @@ Here's how to get started with flags.gg in react.
 
 ## Installation
 
-```bash npm2yarn
-npm install @flags-gg/react-library
-```
+{{< install-toggle copy="true" >}}
+@flags-gg/react-library
+{{< /install-toggle >}}
 
 ## App.tsx
 
