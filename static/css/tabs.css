@@ -32,3 +32,13 @@
 .tab-content .tab-pane.active + .copy, .tab-content .tab-pane.active + .copied{
 	display: block;
 }
+
+table {
+	border-width: 1px;
+}
+thead, th, tr {
+	border-width: 1px;
+}
+td {
+	padding: 1em;
+}
