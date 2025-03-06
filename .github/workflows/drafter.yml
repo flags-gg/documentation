@@ -14,13 +14,6 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@v2024.2
-        with:
-          pr-mode: false
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_1660383358 }}
-          QODANA_ENDPOINT: 'https://qodana.cloud'
       - uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
