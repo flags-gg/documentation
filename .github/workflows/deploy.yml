@@ -72,7 +72,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: gchr.io/flags-gg/docs
+          images: registry.gitlab.com/flags-gg/docs
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{raw}}
@@ -92,9 +92,9 @@ jobs:
       - name: Login Github
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USERNAME }}
+          password: ${{ secrets.GITLAB_POT }}
       - name: Build and Push
         id: docker_build
         uses: docker/build-push-action@v5
