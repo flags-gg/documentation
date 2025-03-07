@@ -94,7 +94,7 @@ jobs:
         with:
           registry: registry.gitlab.com
           username: ${{ secrets.GITLAB_USERNAME }}
-          password: ${{ secrets.GITLAB_POT }}
+          password: ${{ secrets.GITLAB_PAT }}
       - name: Build and Push
         id: docker_build
         uses: docker/build-push-action@v5
