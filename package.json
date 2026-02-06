@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "start": "astro build && npx serve dist -l ${PORT:-3000}",
+    "start": "node dist/server/entry.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
@@ -20,9 +20,9 @@
     "node": ">=22"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.2",
     "@astrojs/starlight": "^0.37.6",
     "astro": "^5.2.0",
-    "sharp": "^0.34.5",
-    "serve": "^14.0.0"
+"sharp": "^0.34.5"
   }
 }
