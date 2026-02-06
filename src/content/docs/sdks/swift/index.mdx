@@ -1,0 +1,70 @@
+---
+title: Swift SDK
+description: Get started with Flags.gg in Swift.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="swift" />
+
+## Requirements
+
+- Swift 5.9+
+- macOS 13.0+ / iOS 16.0+ / tvOS 16.0+ / watchOS 9.0+
+
+## Installation
+
+Add to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/flags-gg/swift.git", from: "1.0.1")
+]
+```
+
+Or in Xcode: **File > Add Packages** and enter the repository URL.
+
+## Quick Start
+
+```swift
+import FlagsGG
+
+let client = try Flags.builder()
+    .withAuth(Auth(
+        projectId: "your-project-id",
+        agentId: "your-agent-id",
+        environmentId: "your-environment-id"
+    ))
+    .build()
+
+// Check a flag
+let enabled = await client.is("my-feature").enabled()
+
+// List all flags
+let flags = try await client.list()
+for flag in flags {
+    print("\(flag.details.name): \(flag.enabled)")
+}
+```
+
+## Batch Operations
+
+```swift
+// Check multiple flags at once
+let results = await client.getMultiple(["feature-1", "feature-2"])
+
+// Check if all flags are enabled
+if await client.allEnabled(["feature-1", "feature-2"]) {
+    print("All enabled")
+}
+
+// Check if any flag is enabled
+if await client.anyEnabled(["premium", "beta"]) {
+    print("At least one enabled")
+}
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/swift/configuration/)
+- [Platform support](/sdks/swift/platforms/)

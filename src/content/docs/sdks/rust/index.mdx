@@ -1,0 +1,66 @@
+---
+title: Rust SDK
+description: Get started with Flags.gg in Rust.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="rust" />
+
+## Installation
+
+```bash
+cargo add flags-rs
+```
+
+## Quick Start
+
+```rust
+use flags_rs::{Auth, Client};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::builder()
+        .with_auth(Auth {
+            project_id: "your-project-id".to_string(),
+            agent_id: "your-agent-id".to_string(),
+            environment_id: "your-environment-id".to_string(),
+        })
+        .with_memory_cache()
+        .build();
+
+    // Check a flag
+    let enabled = client.is("my-feature").enabled().await;
+    println!("my-feature: {}", enabled);
+
+    // List all flags
+    let flags = client.list().await?;
+    for flag in flags {
+        println!("{}: {}", flag.details.name, flag.enabled);
+    }
+
+    Ok(())
+}
+```
+
+## Batch Operations
+
+```rust
+// Check multiple flags at once
+let results = client.get_multiple(&["feature-1", "feature-2"]).await;
+
+// Check if all flags are enabled
+if client.all_enabled(&["feature-1", "feature-2"]).await {
+    println!("All features enabled");
+}
+
+// Check if any flag is enabled
+if client.any_enabled(&["premium", "beta"]).await {
+    println!("At least one feature enabled");
+}
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/rust/configuration/)
+- [Tower middleware integration](/sdks/rust/tower-middleware/)

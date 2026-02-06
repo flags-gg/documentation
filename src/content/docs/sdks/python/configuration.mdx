@@ -1,0 +1,55 @@
+---
+title: Python Configuration
+description: Configuration options for the Python SDK.
+---
+
+## Client Options
+
+```python
+from flags import new_client
+
+client = new_client(
+    # Authentication (required)
+    project_id="your-project-id",
+    agent_id="your-agent-id",
+    environment_id="your-environment-id",
+
+    # API configuration
+    base_url="https://custom-api.flags.gg",  # default: https://api.flags.gg
+    timeout=30,                               # default: 10 seconds
+    max_retries=5,                            # default: 3
+
+    # Cache
+    use_memory_cache=True,                    # default: False (uses SQLite)
+    sqlite_path="/path/to/cache.db",          # default: /tmp/flags.db
+
+    # Custom user agent
+    user_agent="MyApp/1.0",
+)
+```
+
+## Options Reference
+
+| Option | Default | Description |
+|---|---|---|
+| `project_id` | — | **Required.** Project identifier |
+| `agent_id` | — | **Required.** Agent identifier |
+| `environment_id` | — | **Required.** Environment identifier |
+| `base_url` | `https://api.flags.gg` | Custom API endpoint |
+| `timeout` | `10` | HTTP request timeout in seconds |
+| `max_retries` | `3` | Max retry attempts |
+| `use_memory_cache` | `False` | Use in-memory cache instead of SQLite |
+| `sqlite_path` | `/tmp/flags.db` | Path to SQLite cache file |
+| `user_agent` | `Flags-Python` | Custom User-Agent header |
+
+## Thread Safety
+
+All operations are thread-safe:
+
+- Memory cache uses read/write locks
+- SQLite cache uses connection pooling and transactions
+- Client operations are protected with appropriate locking
+
+## Dependencies
+
+The SDK only requires the `requests` library.

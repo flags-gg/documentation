@@ -1,0 +1,63 @@
+---
+title: C# Configuration
+description: Configuration options for the C# SDK.
+---
+
+## Client Options
+
+```csharp
+var client = FlagsClient.Create(options =>
+{
+    // Required
+    options.Auth = new Auth
+    {
+        ProjectId = "project-id",
+        AgentId = "agent-id",
+        EnvironmentId = "env-id"
+    };
+
+    // Optional
+    options.Cache = new MemoryCache();                     // default: SqliteCache
+    options.BaseUrl = "https://custom-api.flags.gg";       // default: https://api.flags.gg
+    options.MaxRetries = 3;                                // default: 3
+    options.HttpTimeout = TimeSpan.FromSeconds(10);        // default: 10s
+    options.HttpClient = myHttpClient;                     // custom HttpClient
+});
+```
+
+## Options Reference
+
+| Option | Default | Description |
+|---|---|---|
+| `Auth` | — | **Required.** Authentication credentials |
+| `Cache` | `SqliteCache` | Cache implementation |
+| `BaseUrl` | `https://api.flags.gg` | API endpoint |
+| `MaxRetries` | `3` | Max retry attempts |
+| `HttpTimeout` | `10 seconds` | HTTP request timeout |
+| `HttpClient` | — | Custom `HttpClient` instance |
+
+## Async and Sync APIs
+
+Every operation has both async and sync versions:
+
+| Async | Sync | Description |
+|---|---|---|
+| `Is("name").EnabledAsync()` | `Is("name").Enabled()` | Check if a flag is enabled |
+| `ListAsync()` | `List()` | Get all flags |
+
+## Thread Safety
+
+All operations are thread-safe and can be used concurrently:
+
+```csharp
+var tasks = Enumerable.Range(0, 100)
+    .Select(_ => client.Is("feature").EnabledAsync());
+var results = await Task.WhenAll(tasks);
+```
+
+## Boolean Value Formats
+
+Environment variable overrides support multiple formats:
+
+`true`, `1`, `on`, `yes`, `enabled` (truthy)
+`false`, `0`, `off`, `no`, `disabled` (falsy)

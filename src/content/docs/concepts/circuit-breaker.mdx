@@ -1,0 +1,59 @@
+---
+title: Circuit Breaker
+description: How Flags.gg SDKs handle API failures gracefully.
+---
+
+## Overview
+
+All backend SDKs include a circuit breaker that prevents cascading failures when the Flags.gg API is unavailable. When the circuit opens, the SDK falls back to cached values instead of making failing API calls.
+
+## How It Works
+
+The circuit breaker has three states:
+
+```
+  ┌────────┐    failures ≥ threshold    ┌────────┐
+  │ Closed │───────────────────────────▶│  Open  │
+  │(normal)│                            │(block) │
+  └────────┘                            └────────┘
+      ▲                                      │
+      │          recovery timeout            │
+      │         ┌───────────┐                │
+      └─────────│ Half-Open │◀───────────────┘
+                │  (probe)  │
+                └───────────┘
+```
+
+1. **Closed** (normal operation) — Requests pass through to the API. Failures are counted.
+2. **Open** (blocking) — After the failure threshold is reached, requests are blocked. The SDK returns cached values.
+3. **Half-Open** (probing) — After the recovery timeout, one request is allowed through. If it succeeds, the circuit closes. If it fails, the circuit re-opens.
+
+## Default Settings
+
+| Setting | Default | Description |
+|---|---|---|
+| Failure threshold | 3 | Number of consecutive failures before opening |
+| Recovery timeout | 10 seconds | Time before attempting to close the circuit |
+
+## Behavior When Open
+
+When the circuit is open:
+
+- `is("flag").enabled()` returns the last cached value
+- If no cached value exists, returns `false` (flag disabled)
+- No API calls are made until the recovery timeout expires
+- The SDK logs that the circuit is open
+
+## Per-SDK Notes
+
+Most SDKs use the same defaults. Kotlin allows customizing both the failure threshold and recovery timeout via the builder:
+
+```kotlin
+val client = FlagsClient.builder()
+    .auth(auth)
+    .failureThreshold(10)
+    .resetTimeout(Duration.ofMinutes(5))
+    .build()
+```
+
+For other SDKs, the circuit breaker operates automatically with sensible defaults and requires no configuration.

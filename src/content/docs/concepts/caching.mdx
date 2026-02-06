@@ -1,0 +1,60 @@
+---
+title: Caching
+description: How Flags.gg SDKs cache flag values locally.
+---
+
+## Overview
+
+All backend SDKs cache flag values locally to minimize API calls and provide resilience when the API is unavailable. The cache is refreshed at intervals determined by the API response.
+
+## Cache Backends
+
+### SQLite (Default)
+
+Most SDKs default to SQLite for persistent caching:
+
+- Survives application restarts
+- Stored at `/tmp/flags.db` by default (configurable)
+- Thread-safe with proper locking
+- Automatic cleanup of expired entries
+
+Available in: **Go**, **Python**, **PHP**, **C#**, **Kotlin**
+
+### Memory Cache
+
+All SDKs support in-memory caching:
+
+- Faster read performance
+- Data lost on application restart
+- Lower overhead for short-lived processes
+
+Available in: **All SDKs**
+
+### Redis Cache
+
+For distributed applications needing shared cache:
+
+- Shared across multiple instances
+- Supports password authentication
+- Configurable key prefix
+
+Available in: **PHP**
+
+## Cache Refresh
+
+The API response includes an `intervalAllowed` field that tells the SDK how frequently to refresh flags. SDKs respect this interval and re-fetch automatically in the background.
+
+## Cache Selection by SDK
+
+| SDK | Default | Options |
+|---|---|---|
+| Go | SQLite | Memory |
+| Rust | Memory | — |
+| Python | SQLite | Memory |
+| PHP | SQLite | Redis |
+| C# | SQLite | Memory |
+| Swift | Memory | — |
+| Kotlin | SQLite | Memory |
+| Ruby | Memory | — |
+| React | Memory (in-browser) | — |
+| Next.js | Memory (in-browser) | — |

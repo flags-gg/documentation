@@ -1,0 +1,36 @@
+---
+title: Ruby Caching
+description: Caching strategies for the Ruby SDK.
+---
+
+## Memory Cache
+
+The Ruby SDK uses an in-memory cache with configurable TTL:
+
+```ruby
+client = Flags::Client.builder
+  .with_auth(auth)
+  .with_memory_cache
+  .build
+```
+
+The memory cache:
+- Provides fast read performance
+- Is thread-safe for concurrent access
+- Has data cleared on application restart
+- Automatically refreshes based on the API-provided TTL
+
+## Cache Refresh
+
+The API response includes a TTL value that determines how frequently the SDK re-fetches flags. This happens automatically in the background — no manual configuration is needed.
+
+## Fallback Behavior
+
+When the API is unavailable:
+
+1. The circuit breaker opens after 3 consecutive failures
+2. Flag checks return the last cached value
+3. If no cached value exists, `enabled?` returns `false`
+4. After a 10-second cooldown, the SDK attempts to reconnect
+
+This means your application continues to function even when the Flags.gg API is down.

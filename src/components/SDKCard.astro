@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string;
+  href: string;
+  icon: string;
+}
+
+const { title, href, icon } = Astro.props;
+---
+
+<a href={href} class="sdk-card">
+  <span class="sdk-icon">{icon}</span>
+  <span class="sdk-title">{title}</span>
+</a>
+
+<style>
+  .sdk-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--sl-color-white);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .sdk-card:hover {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-gray-6);
+  }
+  .sdk-icon {
+    font-size: 2rem;
+  }
+  .sdk-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+</style>

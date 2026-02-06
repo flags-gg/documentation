@@ -1,0 +1,82 @@
+{
+  "go": {
+    "name": "Go",
+    "version": "1.6.3",
+    "packageName": "github.com/flags-gg/go-flags",
+    "installCommand": "go get github.com/flags-gg/go-flags",
+    "registryUrl": "https://pkg.go.dev/github.com/flags-gg/go-flags",
+    "repoUrl": "https://github.com/flags-gg/go-flags"
+  },
+  "rust": {
+    "name": "Rust",
+    "version": "0.2.7",
+    "packageName": "flags-rs",
+    "installCommand": "cargo add flags-rs",
+    "registryUrl": "https://crates.io/crates/flags-rs",
+    "repoUrl": "https://github.com/flags-gg/flags-rs"
+  },
+  "python": {
+    "name": "Python",
+    "version": "0.1.4",
+    "packageName": "flags-gg",
+    "installCommand": "pip install flags-gg",
+    "registryUrl": "https://pypi.org/project/flags-gg/",
+    "repoUrl": "https://github.com/flags-gg/python-library"
+  },
+  "php": {
+    "name": "PHP",
+    "version": "0.1.3",
+    "packageName": "flags-gg/flags-php",
+    "installCommand": "composer require flags-gg/flags-php",
+    "registryUrl": "https://packagist.org/packages/flags-gg/flags-php",
+    "repoUrl": "https://github.com/flags-gg/flags-php"
+  },
+  "csharp": {
+    "name": "C#",
+    "version": "0.1.3",
+    "packageName": "Flags.GG",
+    "installCommand": "dotnet add package Flags.GG",
+    "registryUrl": "https://www.nuget.org/packages/Flags.GG",
+    "repoUrl": "https://github.com/flags-gg/flags-csharp"
+  },
+  "swift": {
+    "name": "Swift",
+    "version": "1.0.1",
+    "packageName": "flags-gg/swift",
+    "installCommand": ".package(url: \"https://github.com/flags-gg/swift.git\", from: \"1.0.1\")",
+    "registryUrl": "https://github.com/flags-gg/swift",
+    "repoUrl": "https://github.com/flags-gg/flags-swift"
+  },
+  "kotlin": {
+    "name": "Kotlin",
+    "version": "1.0.0",
+    "packageName": "gg.flags:flags-kotlin",
+    "installCommand": "implementation(\"gg.flags:flags-kotlin:1.0.0\")",
+    "registryUrl": "https://central.sonatype.com/artifact/gg.flags/flags-kotlin",
+    "repoUrl": "https://github.com/flags-gg/flags-kotlin"
+  },
+  "ruby": {
+    "name": "Ruby",
+    "version": "0.1.2",
+    "packageName": "flags-gem",
+    "installCommand": "gem install flags-gem",
+    "registryUrl": "https://rubygems.org/gems/flags-gem",
+    "repoUrl": "https://github.com/flags-gg/flags-gem"
+  },
+  "react": {
+    "name": "React",
+    "version": "0.2.8",
+    "packageName": "@flags-gg/react-library",
+    "installCommand": "pnpm add @flags-gg/react-library",
+    "registryUrl": "https://www.npmjs.com/package/@flags-gg/react-library",
+    "repoUrl": "https://github.com/flags-gg/react-library"
+  },
+  "nextjs": {
+    "name": "Next.js",
+    "version": "0.2.8",
+    "packageName": "@flags-gg/react-library",
+    "installCommand": "pnpm add @flags-gg/react-library",
+    "registryUrl": "https://www.npmjs.com/package/@flags-gg/react-library",
+    "repoUrl": "https://github.com/flags-gg/react-library"
+  }
+}

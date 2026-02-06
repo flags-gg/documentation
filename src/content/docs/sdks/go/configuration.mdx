@@ -1,0 +1,43 @@
+---
+title: Go Configuration
+description: Configuration options for the Go SDK.
+---
+
+## Client Options
+
+The Go SDK uses functional options for configuration:
+
+```go
+client := flags.NewClient(
+    flags.WithAuth(flags.Auth{
+        ProjectID:     "your-project-id",
+        AgentID:       "your-agent-id",
+        EnvironmentID: "your-environment-id",
+    }),
+    flags.WithBaseURL("https://custom-api.flags.gg"),
+    flags.WithMaxRetries(5),
+    flags.WithMemory(),
+)
+```
+
+## Options Reference
+
+| Option | Default | Description |
+|---|---|---|
+| `WithAuth(Auth)` | — | **Required.** Set project, agent, and environment IDs |
+| `WithBaseURL(string)` | `https://api.flags.gg` | Custom API endpoint |
+| `WithMaxRetries(int)` | `3` | Max retry attempts on failure |
+| `WithMemory()` | SQLite | Use in-memory cache instead of SQLite |
+| `SetFileName(*string)` | `/tmp/flags.db` | Custom SQLite database path |
+
+## Thread Safety
+
+The client is safe for concurrent use. All operations use `sync.RWMutex` internally.
+
+## Error Handling
+
+The client handles errors gracefully:
+
+- API failures fall back to cached values
+- Unknown flags return `false` (disabled)
+- The circuit breaker prevents cascading failures after 3 consecutive errors

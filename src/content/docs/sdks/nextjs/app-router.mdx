@@ -1,0 +1,72 @@
+---
+title: App Router
+description: Using Flags.gg with the Next.js App Router.
+---
+
+## Overview
+
+The App Router in Next.js uses React Server Components by default. Since Flags.gg uses React context and hooks, flag checks must happen in client components.
+
+## Setup
+
+### 1. Create a client provider
+
+```tsx
+// src/components/ClientProvider.tsx
+"use client";
+import { FlagsProvider } from "@flags-gg/react-library";
+
+export default function ClientProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <FlagsProvider options={{
+      projectId: "YOUR_PROJECT_ID",
+      agentId: "YOUR_AGENT_ID",
+      environmentId: "YOUR_ENVIRONMENT_ID",
+    }}>
+      {children}
+    </FlagsProvider>
+  );
+}
+```
+
+### 2. Add to your root layout
+
+```tsx
+// src/app/layout.tsx
+import ClientProvider from "~/components/ClientProvider";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <ClientProvider>
+          <main>{children}</main>
+        </ClientProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 3. Use in client components
+
+```tsx
+"use client";
+import { useFlags } from "@flags-gg/react-library";
+
+export function FeatureCard() {
+  const { is } = useFlags();
+
+  if (!is("new-card")?.enabled()) {
+    return null;
+  }
+
+  return <div>New card design</div>;
+}
+```
+
+## Important Notes
+
+- `FlagsProvider` and `useFlags` require the `"use client"` directive
+- Server Components cannot use `useFlags` directly — wrap flag-dependent UI in a client component
+- The provider fetches flags on the client side after hydration

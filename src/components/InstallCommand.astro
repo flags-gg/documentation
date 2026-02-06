@@ -1,0 +1,29 @@
+---
+import versions from "../../data/versions.json";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+interface Props {
+  sdk: keyof typeof versions;
+}
+
+const { sdk } = Astro.props;
+const info = versions[sdk];
+
+const isNpm = ["react", "nextjs"].includes(sdk);
+---
+
+{isNpm ? (
+  <Tabs>
+    <TabItem label="pnpm">
+      <pre><code>pnpm add {info.packageName}</code></pre>
+    </TabItem>
+    <TabItem label="npm">
+      <pre><code>npm install {info.packageName}</code></pre>
+    </TabItem>
+    <TabItem label="yarn">
+      <pre><code>yarn add {info.packageName}</code></pre>
+    </TabItem>
+  </Tabs>
+) : (
+  <pre><code>{info.installCommand}</code></pre>
+)}

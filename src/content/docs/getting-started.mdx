@@ -1,0 +1,62 @@
+---
+title: Getting Started
+description: Set up Flags.gg in your project in under 5 minutes.
+---
+
+## 1. Create an account
+
+Sign up at [flags.gg](https://flags.gg) and create your first project.
+
+## 2. Create a project
+
+From the dashboard, create a new project. Each project can have multiple agents and environments.
+
+## 3. Get your credentials
+
+Every SDK requires three identifiers:
+
+| Credential | Description |
+|---|---|
+| **Project ID** | Identifies your project |
+| **Agent ID** | Identifies the agent (application or service) |
+| **Environment ID** | Identifies the environment (production, staging, etc.) |
+
+You can find these in the dashboard under your project settings.
+
+## 4. Create a flag
+
+In your project dashboard, create a feature flag and toggle it on or off.
+
+## 5. Install an SDK
+
+Pick the SDK for your stack:
+
+### Frontend
+
+| SDK | Install |
+|---|---|
+| [React](/sdks/react/) | `pnpm add @flags-gg/react-library` |
+| [Next.js](/sdks/nextjs/) | `pnpm add @flags-gg/react-library` |
+
+### Backend
+
+| SDK | Install |
+|---|---|
+| [Go](/sdks/go/) | `go get github.com/flags-gg/go-flags` |
+| [Rust](/sdks/rust/) | `cargo add flags-rs` |
+| [Python](/sdks/python/) | `pip install flags-gg` |
+| [PHP](/sdks/php/) | `composer require flags-gg/flags-php` |
+| [C#](/sdks/csharp/) | `dotnet add package Flags.GG` |
+| [Swift](/sdks/swift/) | Add via Swift Package Manager |
+| [Kotlin](/sdks/kotlin/) | `implementation("gg.flags:flags-kotlin:1.0.0")` |
+| [Ruby](/sdks/ruby/) | `gem install flags-gem` |
+
+## 6. Check a flag
+
+Every SDK follows the same pattern — initialize a client with your credentials, then check flags:
+
+```
+client.is("my-feature").enabled()
+```
+
+See individual SDK pages for language-specific examples.

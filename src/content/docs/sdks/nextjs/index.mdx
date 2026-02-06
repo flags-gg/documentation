@@ -1,0 +1,78 @@
+---
+title: Next.js SDK
+description: Get started with Flags.gg in Next.js.
+---
+
+import InstallCommand from "../../../../components/InstallCommand.astro";
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="nextjs" />
+
+The Next.js SDK uses `@flags-gg/react-library` — the same package as the React SDK. It works with both the App Router and Pages Router.
+
+## Installation
+
+<InstallCommand sdk="nextjs" />
+
+## Quick Start (App Router)
+
+Create a client provider component:
+
+```tsx
+// src/components/ClientProvider.tsx
+"use client";
+import { FlagsProvider } from "@flags-gg/react-library";
+
+export default function ClientProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <FlagsProvider options={{
+      projectId: "YOUR_PROJECT_ID",
+      agentId: "YOUR_AGENT_ID",
+      environmentId: "YOUR_ENVIRONMENT_ID",
+    }}>
+      {children}
+    </FlagsProvider>
+  );
+}
+```
+
+Wrap your layout:
+
+```tsx
+// src/app/layout.tsx
+import ClientProvider from "~/components/ClientProvider";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <ClientProvider>
+          <main>{children}</main>
+        </ClientProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+Use flags in client components:
+
+```tsx
+"use client";
+import { useFlags } from "@flags-gg/react-library";
+
+export function MyComponent() {
+  const { is } = useFlags();
+
+  if (!is("intro")?.enabled()) {
+    return null;
+  }
+
+  return <div>Show component</div>;
+}
+```
+
+## Next Steps
+
+- [App Router integration](/sdks/nextjs/app-router/)
+- [Pages Router integration](/sdks/nextjs/pages-router/)

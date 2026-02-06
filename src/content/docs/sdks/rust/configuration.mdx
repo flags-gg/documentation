@@ -1,0 +1,55 @@
+---
+title: Rust Configuration
+description: Configuration options for the Rust SDK.
+---
+
+## Client Builder
+
+The Rust SDK uses a builder pattern for configuration:
+
+```rust
+use flags_rs::{Auth, Client};
+
+let client = Client::builder()
+    .with_auth(Auth {
+        project_id: "your-project-id".to_string(),
+        agent_id: "your-agent-id".to_string(),
+        environment_id: "your-environment-id".to_string(),
+    })
+    .with_base_url("https://custom-api.flags.gg")
+    .with_max_retries(5)
+    .with_memory_cache()
+    .build();
+```
+
+## Builder Methods
+
+| Method | Default | Description |
+|---|---|---|
+| `with_auth(Auth)` | — | **Required.** Set authentication credentials |
+| `with_base_url(&str)` | `https://api.flags.gg` | Custom API endpoint |
+| `with_max_retries(u32)` | `3` | Max retry attempts |
+| `with_memory_cache()` | Memory | Use in-memory cache |
+
+## Error Types
+
+The SDK defines a `FlagError` enum:
+
+| Variant | Description |
+|---|---|
+| `HttpError` | Network or HTTP errors |
+| `CacheError` | Cache operation errors |
+| `AuthError` | Authentication errors |
+| `ApiError` | API response errors |
+| `BuilderError` | Configuration errors |
+
+The client gracefully degrades — it falls back to cached or default values rather than panicking.
+
+## Async Runtime
+
+The SDK uses `tokio` for async operations. All flag checks and list operations are async:
+
+```rust
+let enabled = client.is("flag").enabled().await;
+let flags = client.list().await?;
+```

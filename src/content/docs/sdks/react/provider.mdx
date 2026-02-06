@@ -1,0 +1,83 @@
+---
+title: FlagsProvider
+description: Configure the React FlagsProvider component.
+---
+
+## Overview
+
+`FlagsProvider` is a React context provider that initializes the Flags.gg client and makes feature flags available to all child components via the `useFlags` hook.
+
+## Usage
+
+```jsx
+import { FlagsProvider } from "@flags-gg/react-library";
+
+function App() {
+  return (
+    <FlagsProvider options={{
+      projectId: "YOUR_PROJECT_ID",
+      agentId: "YOUR_AGENT_ID",
+      environmentId: "YOUR_ENVIRONMENT_ID",
+    }}>
+      <YourApp />
+    </FlagsProvider>
+  );
+}
+```
+
+## Props
+
+### `options` (required)
+
+| Property | Type | Required | Description |
+|---|---|---|---|
+| `projectId` | `string` | Yes | Your Flags.gg project ID |
+| `agentId` | `string` | Yes | Your agent ID |
+| `environmentId` | `string` | Yes | Your environment ID |
+| `flagsURL` | `string` | No | Custom API endpoint (defaults to `https://api.flags.gg/flags`) |
+| `enableLogs` | `boolean` | No | Enable debug logging |
+
+## How It Works
+
+1. On mount, the provider fetches flags from the API using the provided credentials
+2. Flags are cached in memory for the lifetime of the component
+3. The provider sets up a refresh interval based on the `intervalAllowed` value from the API response (default: 15 minutes)
+4. Local overrides are persisted in `localStorage` under the key `flagsgg:overrides`
+5. An abort controller handles cleanup on unmount
+
+## Placement
+
+Place `FlagsProvider` as high in your component tree as needed. It only needs to wrap the components that use `useFlags`:
+
+```jsx
+// Wrap the entire app
+<FlagsProvider options={config}>
+  <App />
+</FlagsProvider>
+
+// Or wrap a specific section
+<FlagsProvider options={config}>
+  <FeatureSection />
+</FlagsProvider>
+```
+
+## With React Router
+
+```jsx
+import { BrowserRouter } from "react-router-dom";
+import { FlagsProvider } from "@flags-gg/react-library";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <FlagsProvider options={{
+        projectId: "YOUR_PROJECT_ID",
+        agentId: "YOUR_AGENT_ID",
+        environmentId: "YOUR_ENVIRONMENT_ID",
+      }}>
+        <Routes />
+      </FlagsProvider>
+    </BrowserRouter>
+  );
+}
+```

@@ -1,0 +1,64 @@
+---
+title: Authentication
+description: How SDKs authenticate with the Flags.gg API.
+---
+
+## Credentials
+
+Every SDK requires three identifiers to authenticate with the API:
+
+| Header | Field | Description |
+|---|---|---|
+| `X-PROJECT-ID` | `projectId` | Your project identifier |
+| `X-AGENT-ID` | `agentId` | The agent (app/service) identifier |
+| `X-ENVIRONMENT-ID` | `environmentId` | The environment identifier |
+
+These are sent as HTTP headers on every request to the API.
+
+## Getting Your Credentials
+
+1. Log in to [flags.gg](https://flags.gg)
+2. Navigate to your project
+3. Select the agent and environment
+4. Copy the IDs from the settings panel
+
+## SDK Usage
+
+Every SDK accepts auth credentials during client initialization:
+
+```go
+// Go
+client := flags.NewClient(
+  flags.WithAuth(flags.Auth{
+    ProjectID:     "your-project-id",
+    AgentID:       "your-agent-id",
+    EnvironmentID: "your-environment-id",
+  }),
+)
+```
+
+```python
+# Python
+client = new_client(
+    project_id="your-project-id",
+    agent_id="your-agent-id",
+    environment_id="your-environment-id",
+)
+```
+
+```jsx
+// React / Next.js
+<FlagsProvider options={{
+  projectId: "your-project-id",
+  agentId: "your-agent-id",
+  environmentId: "your-environment-id",
+}}>
+```
+
+See individual SDK pages for the complete setup.
+
+## Security
+
+- Credentials identify which flags to serve — they do not grant write access
+- Use different environment IDs for production, staging, and development
+- Never commit credentials to version control; use environment variables or secret managers

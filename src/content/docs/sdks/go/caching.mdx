@@ -1,0 +1,48 @@
+---
+title: Go Caching
+description: Caching strategies for the Go SDK.
+---
+
+## SQLite Cache (Default)
+
+By default, the Go SDK caches flags in a SQLite database at `/tmp/flags.db`. This persists across application restarts.
+
+```go
+// Default SQLite cache
+client := flags.NewClient(
+    flags.WithAuth(auth),
+)
+
+// Custom SQLite path
+path := "/var/data/flags.db"
+client := flags.NewClient(
+    flags.WithAuth(auth),
+    flags.SetFileName(&path),
+)
+```
+
+## Memory Cache
+
+For applications where persistence isn't needed:
+
+```go
+client := flags.NewClient(
+    flags.WithAuth(auth),
+    flags.WithMemory(),
+)
+```
+
+The memory cache uses `sync.Map` for thread-safe concurrent access.
+
+## Cache Refresh
+
+The API response includes a refresh interval. The SDK automatically re-fetches flags at this interval. No manual configuration is needed.
+
+## Cache Interface
+
+The Go SDK defines a `Cache` interface with two implementations:
+
+- **`cache.SQLiteCache`** — Persistent storage using SQLite
+- **`cache.MemoryCache`** — In-memory storage using `sync.Map`
+
+You can implement the `Cache` interface to create a custom cache backend.

@@ -1,0 +1,90 @@
+---
+title: Swift Platforms
+description: Platform support and considerations for the Swift SDK.
+---
+
+## Supported Platforms
+
+| Platform | Minimum Version |
+|---|---|
+| macOS | 13.0+ |
+| iOS | 16.0+ |
+| tvOS | 16.0+ |
+| watchOS | 9.0+ |
+
+## iOS Integration
+
+```swift
+import SwiftUI
+import FlagsGG
+
+@main
+struct MyApp: App {
+    let flags: Flags
+
+    init() {
+        flags = try! Flags.builder()
+            .withAuth(Auth(
+                projectId: "your-project-id",
+                agentId: "your-agent-id",
+                environmentId: "your-environment-id"
+            ))
+            .build()
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView(flags: flags)
+        }
+    }
+}
+
+struct ContentView: View {
+    let flags: Flags
+    @State private var showBeta = false
+
+    var body: some View {
+        VStack {
+            if showBeta {
+                Text("Beta feature!")
+            }
+        }
+        .task {
+            showBeta = await flags.is("beta-ui").enabled()
+        }
+    }
+}
+```
+
+## macOS / Server-Side Swift
+
+For server-side Swift (e.g., Vapor), initialize the client once and share it across request handlers:
+
+```swift
+import Vapor
+import FlagsGG
+
+func configure(_ app: Application) throws {
+    let flags = try Flags.builder()
+        .withAuth(Auth(
+            projectId: "your-project-id",
+            agentId: "your-agent-id",
+            environmentId: "your-environment-id"
+        ))
+        .build()
+
+    app.storage[FlagsKey.self] = flags
+}
+```
+
+## Rust API Compatibility
+
+The Swift SDK maintains API compatibility with the Rust SDK:
+
+| Rust | Swift |
+|---|---|
+| `client.is("name").enabled().await` | `await client.is("name").enabled()` |
+| `client.list().await?` | `try await client.list()` |
+| `client.get_multiple(&[...]).await` | `await client.getMultiple([...])` |
+| `client.all_enabled(&[...]).await` | `await client.allEnabled([...])` |
+| `client.any_enabled(&[...]).await` | `await client.anyEnabled([...])` |

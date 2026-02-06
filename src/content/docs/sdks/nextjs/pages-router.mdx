@@ -1,0 +1,53 @@
+---
+title: Pages Router
+description: Using Flags.gg with the Next.js Pages Router.
+---
+
+## Overview
+
+With the Pages Router, wrap your app in `_app.tsx` to make flags available on all pages.
+
+## Setup
+
+### 1. Add the provider to `_app.tsx`
+
+```tsx
+// pages/_app.tsx
+import type { AppProps } from "next/app";
+import { FlagsProvider } from "@flags-gg/react-library";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <FlagsProvider options={{
+      projectId: "YOUR_PROJECT_ID",
+      agentId: "YOUR_AGENT_ID",
+      environmentId: "YOUR_ENVIRONMENT_ID",
+    }}>
+      <Component {...pageProps} />
+    </FlagsProvider>
+  );
+}
+```
+
+### 2. Use flags in any component
+
+```tsx
+import { useFlags } from "@flags-gg/react-library";
+
+export default function HomePage() {
+  const { is } = useFlags();
+
+  return (
+    <div>
+      <h1>Welcome</h1>
+      {is("promo-banner")?.enabled() && (
+        <div>Special promotion!</div>
+      )}
+    </div>
+  );
+}
+```
+
+## With `getServerSideProps` / `getStaticProps`
+
+Flags are evaluated on the client side. If you need server-side flag evaluation, use one of the [backend SDKs](/sdks/) in your API routes or `getServerSideProps` and pass the result as props.

@@ -1,0 +1,62 @@
+---
+title: PHP Caching
+description: Caching strategies for the PHP SDK.
+---
+
+## SQLite Cache (Default)
+
+```php
+use FlagsGG\Client;
+use FlagsGG\Cache\SQLiteCache;
+
+// Default path: /tmp/flags.db
+$client = new Client();
+
+// Custom path
+$cache = new SQLiteCache('/path/to/cache.db');
+$client = new Client($cache);
+```
+
+## Redis Cache
+
+For distributed applications or when you need shared cache across multiple servers:
+
+```php
+use FlagsGG\Client;
+use FlagsGG\Cache\RedisCache;
+
+// Create and connect
+$redisCache = new RedisCache();
+$redisCache->connect(
+    host: '127.0.0.1',
+    port: 6379,
+    password: 'your-password',  // optional
+    database: 0
+);
+
+$client = new Client($redisCache);
+```
+
+### Using an Existing Redis Instance
+
+```php
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379);
+
+$redisCache = new RedisCache($redis, 'my_app:');  // optional key prefix
+$client = new Client($redisCache);
+```
+
+Redis is useful when:
+- Multiple application instances need to share flag state
+- You already have Redis in your infrastructure
+- You want faster reads than SQLite
+
+## Cache Comparison
+
+| Feature | SQLite | Redis |
+|---|---|---|
+| Persistent | Yes | Yes |
+| Shared across instances | No | Yes |
+| Requires extension | PDO | Redis |
+| Setup complexity | None | Moderate |

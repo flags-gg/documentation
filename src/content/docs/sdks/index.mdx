@@ -1,0 +1,49 @@
+---
+title: SDK Overview
+description: All available Flags.gg SDKs and their capabilities.
+---
+
+import VersionBadge from "../../../components/VersionBadge.astro";
+
+## Frontend SDKs
+
+| SDK | Version | Package |
+|---|---|---|
+| [React](/sdks/react/) | <VersionBadge sdk="react" /> | `@flags-gg/react-library` |
+| [Next.js](/sdks/nextjs/) | <VersionBadge sdk="nextjs" /> | `@flags-gg/react-library` |
+
+## Backend SDKs
+
+| SDK | Version | Package |
+|---|---|---|
+| [Go](/sdks/go/) | <VersionBadge sdk="go" /> | `github.com/flags-gg/go-flags` |
+| [Rust](/sdks/rust/) | <VersionBadge sdk="rust" /> | `flags-rs` |
+| [Python](/sdks/python/) | <VersionBadge sdk="python" /> | `flags-gg` |
+| [PHP](/sdks/php/) | <VersionBadge sdk="php" /> | `flags-gg/flags-php` |
+| [C#](/sdks/csharp/) | <VersionBadge sdk="csharp" /> | `Flags.GG` |
+| [Swift](/sdks/swift/) | <VersionBadge sdk="swift" /> | `flags-gg/swift` |
+| [Kotlin](/sdks/kotlin/) | <VersionBadge sdk="kotlin" /> | `gg.flags:flags-kotlin` |
+| [Ruby](/sdks/ruby/) | <VersionBadge sdk="ruby" /> | `flags-gem` |
+
+## Feature Comparison
+
+| Feature | Go | Rust | Python | PHP | C# | Swift | Kotlin | Ruby | React | Next.js |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SQLite cache | Yes | — | Yes | Yes | Yes | — | Yes | — | — | — |
+| Memory cache | Yes | Yes | Yes | — | Yes | Yes | Yes | Yes | Yes | Yes |
+| Redis cache | — | — | — | Yes | — | — | — | — | — | — |
+| Circuit breaker | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
+| Env overrides | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
+| Async support | — | Yes | — | — | Yes | Yes | Yes | — | Yes | Yes |
+| Batch operations | — | Yes | — | — | — | Yes | — | — | — | — |
+| Secret menu | — | — | — | — | — | — | — | — | Yes | Yes |
+
+## Common API Pattern
+
+All SDKs follow the same pattern:
+
+1. **Initialize** a client with your project, agent, and environment IDs
+2. **Check** a flag with `is("flag-name").enabled()`
+3. **List** all flags with `list()`
+
+The client handles caching, retries, circuit breaking, and environment overrides automatically.

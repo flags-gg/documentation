@@ -1,0 +1,73 @@
+---
+title: Kotlin Configuration
+description: Configuration options for the Kotlin SDK.
+---
+
+## Builder Pattern
+
+```kotlin
+val client = FlagsClient.builder()
+    .auth(Auth(
+        projectId = "your-project-id",
+        agentId = "your-agent-id",
+        environmentId = "your-environment-id"
+    ))
+    .baseUrl("https://custom-api.flags.gg")
+    .maxRetries(5)
+    .failureThreshold(10)
+    .resetTimeout(Duration.ofMinutes(5))
+    .withMemoryCache()
+    .build()
+```
+
+## Builder Methods
+
+| Method | Default | Description |
+|---|---|---|
+| `auth(Auth)` | — | **Required.** Authentication credentials |
+| `baseUrl(String)` | `https://api.flags.gg` | Custom API endpoint |
+| `maxRetries(Int)` | `3` | Max retry attempts |
+| `failureThreshold(Int)` | `3` | Circuit breaker failure threshold |
+| `resetTimeout(Duration)` | `10 seconds` | Circuit breaker reset timeout |
+| `withMemoryCache()` | SQLite | Use in-memory cache |
+| `withSQLiteCache(String)` | `flags.db` | Custom SQLite path |
+| `httpClient(HttpClient)` | — | Custom Ktor HTTP client |
+
+## Go-Style Options
+
+```kotlin
+val client = FlagsClient.NewClient(
+    WithAuth(auth),
+    WithBaseURL("https://custom-api.flags.gg"),
+    WithMaxRetries(5),
+    WithMemory(),
+    WithSQLite("custom.db"),
+    WithHttpClient(customClient),
+)
+```
+
+## API Methods
+
+### Builder-style API
+
+| Method | Returns | Description |
+|---|---|---|
+| `isEnabled(String)` | `Boolean` | Check if a flag is enabled |
+| `flag(String)` | `Flag` | Get a flag object |
+| `getAllFlags()` | `List<FeatureFlag>` | Get all flags |
+| `close()` | `Unit` | Close the client and release resources |
+
+### Go-style API
+
+| Method | Returns | Description |
+|---|---|---|
+| `Is(String)` | `FlagResult` | Get a flag result |
+| `FlagResult.Enabled()` | `Boolean` | Check if enabled |
+
+## Cleanup
+
+Always close the client when done to release HTTP connections:
+
+```kotlin
+client.close()
+```

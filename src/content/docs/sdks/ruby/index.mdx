@@ -1,0 +1,75 @@
+---
+title: Ruby SDK
+description: Get started with Flags.gg in Ruby.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="ruby" />
+
+## Installation
+
+Add to your Gemfile:
+
+```ruby
+gem 'flags-gem'
+```
+
+Then run:
+
+```bash
+bundle install
+```
+
+Or install directly:
+
+```bash
+gem install flags-gem
+```
+
+## Quick Start
+
+```ruby
+require 'flags'
+
+client = Flags::Client.builder
+  .with_auth(Flags::Auth.new(
+    project_id: 'your-project-id',
+    agent_id: 'your-agent-id',
+    environment_id: 'your-environment-id'
+  ))
+  .with_memory_cache
+  .build
+
+# Check a flag
+if client.is('my-feature').enabled?
+  puts 'Feature is enabled!'
+end
+
+# List all flags
+flags = client.list
+flags.each do |flag|
+  puts "#{flag.details.name}: #{flag.enabled}"
+end
+```
+
+## Error Handling
+
+```ruby
+begin
+  client.is('my-flag').enabled?
+rescue Flags::AuthError => e
+  puts "Authentication error: #{e.message}"
+rescue Flags::ApiError => e
+  puts "API error: #{e.message}"
+rescue Flags::HttpError => e
+  puts "HTTP error: #{e.message}"
+rescue Flags::CacheError => e
+  puts "Cache error: #{e.message}"
+end
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/ruby/configuration/)
+- [Caching strategies](/sdks/ruby/caching/)

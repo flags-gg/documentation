@@ -1,0 +1,43 @@
+---
+title: Flags.gg Documentation
+description: Feature flag management for any stack. Control feature rollouts with SDKs for Go, Rust, Python, PHP, C#, Swift, Kotlin, Ruby, React, and Next.js.
+template: splash
+hero:
+  title: Flags.gg
+  tagline: Feature flag management for any stack. Ship features safely with instant rollouts, local overrides, and built-in resilience.
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/flags-gg
+      icon: external
+      variant: minimal
+---
+
+import SDKCard from "../../components/SDKCard.astro";
+
+## SDKs
+
+<div class="sdk-grid">
+  <SDKCard title="React" href="/sdks/react/" icon="⚛️" />
+  <SDKCard title="Next.js" href="/sdks/nextjs/" icon="▲" />
+  <SDKCard title="Go" href="/sdks/go/" icon="🐹" />
+  <SDKCard title="Rust" href="/sdks/rust/" icon="🦀" />
+  <SDKCard title="Python" href="/sdks/python/" icon="🐍" />
+  <SDKCard title="PHP" href="/sdks/php/" icon="🐘" />
+  <SDKCard title="C#" href="/sdks/csharp/" icon="🟣" />
+  <SDKCard title="Swift" href="/sdks/swift/" icon="🍎" />
+  <SDKCard title="Kotlin" href="/sdks/kotlin/" icon="🟠" />
+  <SDKCard title="Ruby" href="/sdks/ruby/" icon="💎" />
+</div>
+
+## Features
+
+- **10 SDKs** — Frontend and backend libraries for every major language
+- **Built-in caching** — SQLite or in-memory caching to minimize API calls
+- **Circuit breaker** — Automatic fallback to cached values when the API is unavailable
+- **Environment overrides** — Override any flag locally with `FLAGS_` environment variables
+- **Secret menu** — Toggle flags at runtime in frontend apps without redeploying
+- **Self-hostable** — Run the entire platform on your own infrastructure

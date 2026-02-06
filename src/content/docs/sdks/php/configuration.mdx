@@ -1,0 +1,46 @@
+---
+title: PHP Configuration
+description: Configuration options for the PHP SDK.
+---
+
+## Client Options
+
+```php
+use FlagsGG\Client;
+
+$client = new Client(
+    cache: $customCache,                         // optional: cache backend
+    baseUrl: 'https://custom-api.flags.gg',      // optional: API endpoint
+    maxRetries: 5,                               // optional: retry attempts
+    httpTimeout: 15                               // optional: timeout in seconds
+);
+
+$client->setAuth(
+    projectId: 'your-project-id',
+    agentId: 'your-agent-id',
+    environmentId: 'your-environment-id'
+);
+```
+
+## Options Reference
+
+| Option | Default | Description |
+|---|---|---|
+| `cache` | SQLite | Cache backend (SQLite, Redis, or custom) |
+| `baseUrl` | `https://api.flags.gg` | API endpoint |
+| `maxRetries` | `3` | Max retry attempts |
+| `httpTimeout` | `10` | HTTP timeout in seconds |
+
+## API Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `setAuth(...)` | `self` | Set authentication credentials |
+| `is(string $name)` | `Flag` | Get a flag object (fluent API) |
+| `isEnabled(string $name)` | `bool` | Check if a flag is enabled (shorthand) |
+| `list()` | `FeatureFlag[]` | Get all flags |
+| `refetch()` | `void` | Manually refresh cache from API |
+
+## PSR-4 Autoloading
+
+The SDK follows PHP-FIG standards and uses PSR-4 autoloading.

@@ -1,0 +1,48 @@
+name: Update SDK Version
+
+on:
+  repository_dispatch:
+    types: [sdk-release]
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update version
+        run: |
+          SDK="${{ github.event.client_payload.sdk }}"
+          VERSION="${{ github.event.client_payload.version }}"
+          VERSION="${VERSION#v}"
+
+          echo "Updating $SDK to $VERSION"
+
+          # Update version field
+          jq --arg sdk "$SDK" --arg ver "$VERSION" \
+            '.[$sdk].version = $ver' data/versions.json > tmp.json && mv tmp.json data/versions.json
+
+          # Handle SDKs where the install command embeds the version
+          case "$SDK" in
+            kotlin)
+              jq --arg sdk "$SDK" --arg ver "$VERSION" \
+                '.[$sdk].installCommand = "implementation(\"gg.flags:flags-kotlin:" + $ver + "\")"' \
+                data/versions.json > tmp.json && mv tmp.json data/versions.json
+              ;;
+            swift)
+              jq --arg sdk "$SDK" --arg ver "$VERSION" \
+                '.[$sdk].installCommand = ".package(url: \"https://github.com/flags-gg/swift.git\", from: \"" + $ver + "\")"' \
+                data/versions.json > tmp.json && mv tmp.json data/versions.json
+              ;;
+          esac
+
+      - name: Commit and push
+        run: |
+          SDK="${{ github.event.client_payload.sdk }}"
+          VERSION="${{ github.event.client_payload.version }}"
+          VERSION="${VERSION#v}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/versions.json
+          git diff --cached --quiet || (git commit -m "chore: update $SDK SDK to $VERSION" && git push)

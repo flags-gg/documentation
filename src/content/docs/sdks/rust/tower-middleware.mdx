@@ -1,0 +1,74 @@
+---
+title: Tower Middleware
+description: Using the Rust SDK as Tower middleware for Axum, Actix, and other frameworks.
+---
+
+## Overview
+
+The Rust SDK can be integrated as middleware in Tower-compatible web frameworks like Axum. This lets you gate entire routes or inject flag state into request handlers.
+
+## Example with Axum
+
+```rust
+use axum::{Router, routing::get, extract::Extension};
+use flags_rs::{Auth, Client};
+use std::sync::Arc;
+
+#[tokio::main]
+async fn main() {
+    let flags = Arc::new(
+        Client::builder()
+            .with_auth(Auth {
+                project_id: "your-project-id".to_string(),
+                agent_id: "your-agent-id".to_string(),
+                environment_id: "your-environment-id".to_string(),
+            })
+            .with_memory_cache()
+            .build(),
+    );
+
+    let app = Router::new()
+        .route("/", get(handler))
+        .layer(Extension(flags));
+
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+
+async fn handler(Extension(flags): Extension<Arc<Client>>) -> &'static str {
+    if flags.is("beta-endpoint").enabled().await {
+        "Beta feature is live!"
+    } else {
+        "Standard response"
+    }
+}
+```
+
+## Shared State
+
+Wrap the client in `Arc` to share it across handlers. The client is internally thread-safe and handles concurrent access.
+
+## Route Gating
+
+You can build middleware that rejects requests based on flag state:
+
+```rust
+use axum::{
+    middleware::{self, Next},
+    http::{Request, StatusCode},
+    response::Response,
+    body::Body,
+};
+
+async fn require_feature(
+    Extension(flags): Extension<Arc<Client>>,
+    request: Request<Body>,
+    next: Next,
+) -> Result<Response, StatusCode> {
+    if flags.is("api-v2").enabled().await {
+        Ok(next.run(request).await)
+    } else {
+        Err(StatusCode::NOT_FOUND)
+    }
+}
+```

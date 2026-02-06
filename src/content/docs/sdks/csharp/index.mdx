@@ -1,0 +1,64 @@
+---
+title: C# SDK
+description: Get started with Flags.gg in C#.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="csharp" />
+
+## Installation
+
+```bash
+dotnet add package Flags.GG
+```
+
+## Quick Start
+
+```csharp
+using Flags.GG.Client;
+using Flags.GG.Models;
+
+var client = FlagsClient.Create(options =>
+{
+    options.Auth = new Auth
+    {
+        ProjectId = "your-project-id",
+        AgentId = "your-agent-id",
+        EnvironmentId = "your-environment-id"
+    };
+});
+
+// Async
+if (await client.Is("new-feature").EnabledAsync())
+{
+    Console.WriteLine("Feature is enabled!");
+}
+
+// Sync
+if (client.Is("new-feature").Enabled())
+{
+    Console.WriteLine("Feature is enabled!");
+}
+
+// List all flags
+var flags = await client.ListAsync();
+foreach (var flag in flags)
+{
+    Console.WriteLine($"{flag.Details.Name}: {flag.Enabled}");
+}
+```
+
+## Disposal
+
+The client implements `IDisposable`:
+
+```csharp
+using var client = FlagsClient.Create(options => { /* ... */ });
+// Automatically disposed at end of scope
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/csharp/configuration/)
+- [Dependency injection](/sdks/csharp/dependency-injection/)

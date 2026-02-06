@@ -1,0 +1,81 @@
+---
+title: C# Dependency Injection
+description: Using the C# SDK with dependency injection.
+---
+
+## Overview
+
+The C# SDK can be integrated with .NET's built-in dependency injection container for clean service lifetime management.
+
+## Registration
+
+Register the client as a singleton in your DI container:
+
+```csharp
+// Program.cs
+using Flags.GG.Client;
+using Flags.GG.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton(_ => FlagsClient.Create(options =>
+{
+    options.Auth = new Auth
+    {
+        ProjectId = builder.Configuration["Flags:ProjectId"]!,
+        AgentId = builder.Configuration["Flags:AgentId"]!,
+        EnvironmentId = builder.Configuration["Flags:EnvironmentId"]!
+    };
+}));
+
+var app = builder.Build();
+```
+
+## Usage in Controllers
+
+```csharp
+public class HomeController : Controller
+{
+    private readonly FlagsClient _flags;
+
+    public HomeController(FlagsClient flags)
+    {
+        _flags = flags;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        if (await _flags.Is("new-homepage").EnabledAsync())
+        {
+            return View("NewHome");
+        }
+        return View();
+    }
+}
+```
+
+## Usage in Minimal APIs
+
+```csharp
+app.MapGet("/", async (FlagsClient flags) =>
+{
+    var enabled = await flags.Is("welcome-banner").EnabledAsync();
+    return Results.Ok(new { banner = enabled });
+});
+```
+
+## Configuration from appsettings.json
+
+```json
+{
+  "Flags": {
+    "ProjectId": "your-project-id",
+    "AgentId": "your-agent-id",
+    "EnvironmentId": "your-environment-id"
+  }
+}
+```
+
+## Lifetime
+
+Register as a **singleton** — the client handles its own caching and thread safety internally. Creating multiple instances would duplicate API calls and cache storage.

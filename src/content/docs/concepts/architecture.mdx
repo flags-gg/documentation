@@ -1,0 +1,51 @@
+---
+title: Architecture
+description: How Flags.gg works — system components and data flow.
+---
+
+## System Overview
+
+Flags.gg is composed of three layers:
+
+1. **Dashboard** — Web UI for managing projects, agents, environments, and flags
+2. **Orchestrator API** — Central API that serves flag configurations to SDKs
+3. **SDKs** — Client libraries that fetch, cache, and evaluate flags
+
+## Data Flow
+
+```
+┌───────────┐       ┌──────────────┐       ┌────────────┐
+│ Dashboard │──────▶│ Orchestrator │◀──────│    SDK     │
+│   (UI)    │       │    (API)     │       │  (Client)  │
+└───────────┘       └──────────────┘       └────────────┘
+                                                  │
+                                           ┌──────┴──────┐
+                                           │    Cache    │
+                                           │ (SQLite /   │
+                                           │   Memory)   │
+                                           └─────────────┘
+```
+
+1. You create and toggle flags in the **Dashboard**
+2. The **Orchestrator** stores and serves flag state via its API
+3. **SDKs** fetch flags from the API, cache them locally, and evaluate them in your application
+
+## Data Model
+
+| Entity | Description |
+|---|---|
+| **Company** | Top-level organization |
+| **Project** | A product or service within a company |
+| **Agent** | An application or service that checks flags |
+| **Environment** | A deployment context (production, staging, development) |
+| **Flag** | A feature toggle with an enabled/disabled state |
+
+## SDK Architecture
+
+All SDKs share the same internal architecture:
+
+- **HTTP Client** — Fetches flags from `https://api.flags.gg` with auth headers
+- **Cache Layer** — Stores flags locally (SQLite default, memory optional)
+- **Circuit Breaker** — Stops API calls after repeated failures, falls back to cache
+- **Environment Override** — Checks `FLAGS_*` environment variables before returning API values
+- **Refresh Loop** — Periodically re-fetches flags at the interval specified by the API response

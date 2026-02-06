@@ -1,0 +1,77 @@
+---
+title: React SDK
+description: Get started with Flags.gg in React.
+---
+
+import InstallCommand from "../../../../components/InstallCommand.astro";
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="react" />
+
+## Installation
+
+<InstallCommand sdk="react" />
+
+## Quick Start
+
+Wrap your app with `FlagsProvider`:
+
+```jsx
+import { FlagsProvider } from "@flags-gg/react-library";
+
+const App = () => {
+  return (
+    <FlagsProvider options={{
+      projectId: "YOUR_PROJECT_ID",
+      agentId: "YOUR_AGENT_ID",
+      environmentId: "YOUR_ENVIRONMENT_ID",
+    }}>
+      <YourApp />
+    </FlagsProvider>
+  );
+};
+```
+
+Then check flags anywhere in your component tree:
+
+```jsx
+import { useFlags } from "@flags-gg/react-library";
+
+const MyComponent = () => {
+  const { is } = useFlags();
+
+  return (
+    <div>
+      {is("intro")?.enabled() && <div>Show intro</div>}
+    </div>
+  );
+};
+```
+
+## Local Flags
+
+You can create flags that exist only in the browser, without defining them in the dashboard:
+
+```jsx
+import { useFlags } from "@flags-gg/react-library";
+
+const MyComponent = () => {
+  const { is } = useFlags();
+
+  is("offlineFlag").initalize(false);
+
+  return (
+    <div>
+      {is("offlineFlag")?.enabled() && <div>Show offline content</div>}
+    </div>
+  );
+};
+```
+
+Local flags can be toggled at runtime using the [secret menu](/sdks/react/secret-menu/).
+
+## Next Steps
+
+- [FlagsProvider setup](/sdks/react/provider/)
+- [useFlags hook API](/sdks/react/hooks/)
+- [Secret menu](/sdks/react/secret-menu/)

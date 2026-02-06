@@ -1,0 +1,76 @@
+---
+title: Environment Overrides
+description: Override feature flags locally using environment variables.
+---
+
+## Overview
+
+All backend SDKs support overriding flag values using environment variables. This is useful for local development, testing, and CI environments where you want to control flags without changing them in the dashboard.
+
+## How It Works
+
+Set an environment variable with the `FLAGS_` prefix followed by the flag name in uppercase:
+
+```bash
+export FLAGS_MY_FEATURE=true
+export FLAGS_BETA_MODE=false
+```
+
+When you check a flag, the SDK checks environment variables **before** checking the API or cache. If a matching environment variable exists, its value is used immediately.
+
+## Name Normalization
+
+Flag names are normalized to match environment variable names. All of these refer to the same flag:
+
+| Environment Variable | Matches Flag Names |
+|---|---|
+| `FLAGS_MY_FEATURE` | `my-feature`, `my_feature`, `my feature` |
+| `FLAGS_DARK_MODE` | `dark-mode`, `dark_mode`, `dark mode` |
+
+The normalization converts hyphens, underscores, and spaces to a common form and ignores case.
+
+## Accepted Values
+
+### Truthy values
+`true`, `1`, `on`, `yes`, `enabled`
+
+### Falsy values
+`false`, `0`, `off`, `no`, `disabled`
+
+## Priority Order
+
+Flags are resolved in this order (highest priority first):
+
+1. **Environment variable** (`FLAGS_*`)
+2. **Cached value** (from API response)
+3. **Default** (`false` / disabled)
+
+## Examples
+
+### Local development
+
+```bash
+# Enable a feature only on your machine
+FLAGS_NEW_CHECKOUT=true go run ./cmd/server
+```
+
+### CI/CD
+
+```bash
+# Disable analytics in test environment
+FLAGS_ANALYTICS=false pytest tests/
+```
+
+### Docker
+
+```dockerfile
+ENV FLAGS_MAINTENANCE_MODE=false
+```
+
+```yaml
+# docker-compose.yml
+services:
+  app:
+    environment:
+      - FLAGS_BETA_FEATURE=true
+```

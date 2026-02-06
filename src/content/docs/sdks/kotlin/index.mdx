@@ -1,0 +1,94 @@
+---
+title: Kotlin SDK
+description: Get started with Flags.gg in Kotlin.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="kotlin" />
+
+## Installation
+
+### Gradle (Kotlin DSL)
+
+```kotlin
+dependencies {
+    implementation("gg.flags:flags-kotlin:1.0.0")
+}
+```
+
+### Gradle (Groovy)
+
+```groovy
+dependencies {
+    implementation 'gg.flags:flags-kotlin:1.0.0'
+}
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>gg.flags</groupId>
+    <artifactId>flags-kotlin</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+## Quick Start
+
+```kotlin
+import gg.flags.client.FlagsClient
+import gg.flags.client.Auth
+
+suspend fun main() {
+    val client = FlagsClient.builder()
+        .auth(Auth(
+            projectId = "your-project-id",
+            agentId = "your-agent-id",
+            environmentId = "your-environment-id"
+        ))
+        .build()
+
+    // Check a flag
+    if (client.isEnabled("new-feature")) {
+        println("Feature is enabled!")
+    }
+
+    // List all flags
+    val flags = client.getAllFlags()
+    flags.forEach { flag ->
+        println("${flag.details.name}: ${flag.enabled}")
+    }
+
+    client.close()
+}
+```
+
+## Go-Style API
+
+An alternative API style is also available:
+
+```kotlin
+import gg.flags.client.*
+
+val client = FlagsClient.NewClient(
+    WithAuth(Auth(
+        projectId = "your-project-id",
+        agentId = "your-agent-id",
+        environmentId = "your-environment-id"
+    )),
+    WithMemory(),
+)
+
+if (client.Is("new-feature").Enabled()) {
+    println("Feature is enabled!")
+}
+
+client.close()
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/kotlin/configuration/)
+- [Coroutines support](/sdks/kotlin/coroutines/)

@@ -1,0 +1,49 @@
+---
+title: Ruby Configuration
+description: Configuration options for the Ruby SDK.
+---
+
+## Client Builder
+
+```ruby
+client = Flags::Client.builder
+  .with_auth(Flags::Auth.new(
+    project_id: 'your-project-id',
+    agent_id: 'your-agent-id',
+    environment_id: 'your-environment-id'
+  ))
+  .with_base_url('https://custom-api.flags.gg')
+  .with_max_retries(5)
+  .with_memory_cache
+  .build
+```
+
+## Builder Methods
+
+| Method | Default | Description |
+|---|---|---|
+| `with_auth(Auth)` | — | **Required.** Authentication credentials |
+| `with_base_url(String)` | `https://api.flags.gg` | Custom API endpoint |
+| `with_max_retries(Integer)` | `3` | Max retry attempts |
+| `with_memory_cache` | Memory | Enable memory caching |
+
+## API Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `is(String)` | `FlagResult` | Get a flag result object |
+| `is(String).enabled?` | `Boolean` | Check if a flag is enabled |
+| `list` | `Array<FeatureFlag>` | Get all flags |
+
+## Error Types
+
+| Error | Description |
+|---|---|
+| `Flags::AuthError` | Authentication errors |
+| `Flags::ApiError` | API response errors |
+| `Flags::HttpError` | Network/HTTP errors |
+| `Flags::CacheError` | Cache operation errors |
+
+## Dependencies
+
+The SDK uses only the Ruby standard library — no external dependencies required.

@@ -1,0 +1,89 @@
+---
+title: Kotlin Coroutines
+description: Using the Kotlin SDK with coroutines.
+---
+
+## Overview
+
+The Kotlin SDK is built on Kotlin coroutines and Ktor for non-blocking HTTP operations. All flag operations are suspend functions.
+
+## Coroutine Support
+
+```kotlin
+import kotlinx.coroutines.runBlocking
+
+fun main() = runBlocking {
+    val client = FlagsClient.builder()
+        .auth(auth)
+        .build()
+
+    // All operations are suspending
+    val enabled = client.isEnabled("my-feature")
+    val flags = client.getAllFlags()
+
+    client.close()
+}
+```
+
+## Integration with Ktor Server
+
+```kotlin
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import gg.flags.client.FlagsClient
+import gg.flags.client.Auth
+
+fun Application.module() {
+    val flags = FlagsClient.builder()
+        .auth(Auth(
+            projectId = "your-project-id",
+            agentId = "your-agent-id",
+            environmentId = "your-environment-id"
+        ))
+        .build()
+
+    routing {
+        get("/") {
+            if (flags.isEnabled("new-homepage")) {
+                call.respondText("New homepage!")
+            } else {
+                call.respondText("Standard homepage")
+            }
+        }
+    }
+
+    environment.monitor.subscribe(ApplicationStopped) {
+        flags.close()
+    }
+}
+```
+
+## Thread Safety
+
+The SDK uses Kotlin mutexes for concurrent cache access and thread-safe circuit breaker state management. All operations are safe to call from multiple coroutines simultaneously.
+
+## Testing with Coroutines
+
+```kotlin
+@Test
+fun testFlags() = runTest {
+    val mockEngine = MockEngine { request ->
+        respond(
+            content = """{"intervalAllowed": 60, "flags": []}""",
+            status = HttpStatusCode.OK
+        )
+    }
+
+    val client = FlagsClient.builder()
+        .auth(Auth("test", "test", "test"))
+        .httpClient(HttpClient(mockEngine) {
+            install(ContentNegotiation) { json() }
+        })
+        .withMemoryCache()
+        .build()
+
+    assertFalse(client.isEnabled("non-existent"))
+    client.close()
+}
+```

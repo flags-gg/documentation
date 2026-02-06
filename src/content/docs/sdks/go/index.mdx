@@ -1,0 +1,57 @@
+---
+title: Go SDK
+description: Get started with Flags.gg in Go.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="go" />
+
+## Installation
+
+```bash
+go get github.com/flags-gg/go-flags
+```
+
+## Quick Start
+
+```go
+package main
+
+import (
+	"fmt"
+	flags "github.com/flags-gg/go-flags"
+)
+
+func main() {
+	client := flags.NewClient(
+		flags.WithAuth(flags.Auth{
+			ProjectID:     "your-project-id",
+			AgentID:       "your-agent-id",
+			EnvironmentID: "your-environment-id",
+		}),
+	)
+
+	if client.Is("new-feature").Enabled() {
+		fmt.Println("Feature is enabled!")
+	}
+}
+```
+
+## Listing Flags
+
+```go
+allFlags, err := client.List()
+if err != nil {
+    log.Fatal(err)
+}
+
+for _, flag := range allFlags {
+    fmt.Printf("%s: %v\n", flag.Details.Name, flag.Enabled)
+}
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/go/configuration/)
+- [Caching strategies](/sdks/go/caching/)

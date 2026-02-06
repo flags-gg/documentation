@@ -1,0 +1,58 @@
+---
+title: PHP SDK
+description: Get started with Flags.gg in PHP.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="php" />
+
+## Requirements
+
+- PHP 8.1+
+- PDO extension (for SQLite cache)
+- cURL extension
+- Redis extension (optional)
+
+## Installation
+
+```bash
+composer require flags-gg/flags-php
+```
+
+## Quick Start
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use FlagsGG\Client;
+
+$client = new Client();
+$client->setAuth(
+    projectId: 'your-project-id',
+    agentId: 'your-agent-id',
+    environmentId: 'your-environment-id'
+);
+
+// Check a flag
+if ($client->is('new-feature')->enabled()) {
+    echo "Feature is enabled!";
+}
+
+// Or use the shorthand
+if ($client->isEnabled('new-feature')) {
+    echo "Feature is enabled!";
+}
+
+// List all flags
+$flags = $client->list();
+foreach ($flags as $flag) {
+    echo $flag->details->name . ': ' . ($flag->enabled ? 'enabled' : 'disabled') . "\n";
+}
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/php/configuration/)
+- [Caching strategies](/sdks/php/caching/)

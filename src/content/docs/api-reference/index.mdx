@@ -1,0 +1,59 @@
+---
+title: API Reference
+description: Flags.gg API endpoints overview.
+---
+
+## Base URL
+
+```
+https://api.flags.gg
+```
+
+## Authentication
+
+All requests must include these headers:
+
+| Header | Description |
+|---|---|
+| `X-PROJECT-ID` | Your project identifier |
+| `X-AGENT-ID` | Your agent identifier |
+| `X-ENVIRONMENT-ID` | Your environment identifier |
+
+## Endpoints
+
+### GET /flags
+
+Fetch all feature flags for the authenticated agent and environment.
+
+**Response:**
+
+```json
+{
+  "intervalAllowed": 900,
+  "flags": [
+    {
+      "enabled": true,
+      "details": {
+        "id": "flag-uuid",
+        "name": "my-feature"
+      }
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `intervalAllowed` | `integer` | Recommended refresh interval in seconds |
+| `flags` | `array` | List of feature flags |
+| `flags[].enabled` | `boolean` | Whether the flag is enabled |
+| `flags[].details.id` | `string` | Unique flag identifier |
+| `flags[].details.name` | `string` | Human-readable flag name |
+
+## SDK Usage
+
+You typically don't need to call the API directly — the SDKs handle all communication, caching, and error handling automatically. See the [SDK overview](/sdks/) for available client libraries.
+
+## Rate Limiting
+
+The `intervalAllowed` field in the response tells clients how frequently they should poll for updates. SDKs respect this value automatically.

@@ -1,0 +1,52 @@
+---
+title: Python Caching
+description: Caching strategies for the Python SDK.
+---
+
+## SQLite Cache (Default)
+
+By default, flags are cached in a SQLite database at `/tmp/flags.db`.
+
+```python
+# Default SQLite cache
+client = new_client(
+    project_id="...",
+    agent_id="...",
+    environment_id="...",
+)
+
+# Custom SQLite path
+client = new_client(
+    project_id="...",
+    agent_id="...",
+    environment_id="...",
+    sqlite_path="/var/data/flags.db",
+)
+```
+
+Benefits:
+- Persists across application restarts
+- Thread-safe with proper locking
+- Automatic cleanup of expired entries
+
+## Memory Cache
+
+For short-lived processes or when persistence isn't needed:
+
+```python
+client = new_client(
+    project_id="...",
+    agent_id="...",
+    environment_id="...",
+    use_memory_cache=True,
+)
+```
+
+Benefits:
+- Faster read performance
+- Lower overhead
+- No file system dependencies
+
+## Cache Refresh
+
+Cache data is automatically refreshed based on the TTL provided by the Flags.gg API. No manual configuration is needed.

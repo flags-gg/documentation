@@ -1,22 +1,17 @@
-#Builder
-FROM containers.chewed-k8s.net/docker_hub_cache/library/golang:alpine3.19 AS builder
-WORKDIR /builder
+# Builder
+FROM node:22-alpine AS builder
+WORKDIR /app
 
-RUN apk update && apk add --no-cache git
-RUN mkdir /src && cd /src
-RUN git clone https://github.com/gohugoio/hugo.git .
-RUN git checkout v0.139.4
-RUN go install
-
-RUN cd /builder
+RUN corepack enable && corepack prepare pnpm@latest --activate
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
+RUN pnpm run build
 
-RUN hugo
+# Runner
+FROM caddy:2-alpine AS runner
 
-## Runner
-FROM caddy AS runner
-
-COPY --from=builder /builder/public /srv
+COPY --from=builder /app/dist /srv
 COPY ./Caddyfile /etc/caddy/Caddyfile
 
 EXPOSE 80

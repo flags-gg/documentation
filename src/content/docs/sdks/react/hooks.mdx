@@ -1,0 +1,84 @@
+---
+title: useFlags Hook
+description: API reference for the useFlags React hook.
+---
+
+## Overview
+
+The `useFlags` hook provides access to feature flags within any component wrapped by `FlagsProvider`.
+
+## Usage
+
+```jsx
+import { useFlags } from "@flags-gg/react-library";
+
+function MyComponent() {
+  const { is } = useFlags();
+
+  if (!is("my-feature")?.enabled()) {
+    return null;
+  }
+
+  return <div>Feature is active</div>;
+}
+```
+
+## API
+
+### `is(flagName: string)`
+
+Returns a flag object with the following methods:
+
+| Method | Return | Description |
+|---|---|---|
+| `enabled()` | `boolean` | Returns `true` if the flag is enabled |
+| `disabled()` | `boolean` | Returns `true` if the flag is disabled |
+| `initalize(defaultValue: boolean)` | `void` | Creates a local-only flag with the given default |
+
+### `toggle(flagName: string)`
+
+Toggles a flag's local override. Useful for development and the secret menu.
+
+## Examples
+
+### Conditional rendering
+
+```jsx
+const { is } = useFlags();
+
+return (
+  <div>
+    {is("new-header")?.enabled() && <NewHeader />}
+    {is("new-header")?.disabled() && <OldHeader />}
+  </div>
+);
+```
+
+### Early return
+
+```jsx
+const { is } = useFlags();
+
+if (!is("beta-feature")?.enabled()) {
+  return null;
+}
+
+return <BetaFeature />;
+```
+
+### Local flags
+
+```jsx
+const { is } = useFlags();
+
+// Create a local flag with a default value
+is("debug-panel").initalize(false);
+
+return (
+  <div>
+    {is("debug-panel")?.enabled() && <DebugPanel />}
+  </div>
+);
+```
+
+Local flags are stored in `localStorage` and can be toggled via the [secret menu](/sdks/react/secret-menu/).

@@ -1,0 +1,55 @@
+---
+title: Swift Configuration
+description: Configuration options for the Swift SDK.
+---
+
+## Client Builder
+
+```swift
+let client = try Flags.builder()
+    .withAuth(Auth(
+        projectId: "your-project-id",
+        agentId: "your-agent-id",
+        environmentId: "your-environment-id"
+    ))
+    .withBaseURL("https://custom-api.flags.gg")
+    .withMaxRetries(5)
+    .withErrorCallback { error in
+        print("Flag error: \(error)")
+    }
+    .build()
+```
+
+## Builder Methods
+
+| Method | Default | Description |
+|---|---|---|
+| `withAuth(Auth)` | — | **Required.** Authentication credentials |
+| `withBaseURL(String)` | `https://api.flags.gg` | Custom API endpoint |
+| `withMaxRetries(Int)` | `3` | Max retry attempts |
+| `withErrorCallback((FlagsError) -> Void)` | — | Error callback handler |
+
+## Error Types
+
+| Error | Description |
+|---|---|
+| `httpError` | Network or HTTP errors |
+| `cacheError` | Cache operation errors |
+| `authError` | Authentication errors |
+| `apiError` | API response errors |
+| `builderError` | Configuration errors |
+
+## Without Authentication
+
+You can use the client with only local flags (environment variables):
+
+```swift
+let client = try Flags.builder().build()
+
+// Only checks FLAGS_* environment variables
+let enabled = await client.is("my-feature").enabled()
+```
+
+## Actor Model
+
+The client uses Swift actors for thread safety. All operations are safe for concurrent access without explicit locking.

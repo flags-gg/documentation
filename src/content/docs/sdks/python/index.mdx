@@ -1,0 +1,54 @@
+---
+title: Python SDK
+description: Get started with Flags.gg in Python.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="python" />
+
+## Installation
+
+```bash
+pip install flags-gg
+```
+
+## Quick Start
+
+```python
+from flags import new_client
+
+client = new_client(
+    project_id="your-project-id",
+    agent_id="your-agent-id",
+    environment_id="your-environment-id",
+)
+
+# Check a flag
+if client.is_("new-feature").enabled():
+    print("Feature is enabled!")
+
+# List all flags
+for flag in client.list():
+    print(f"{flag.details.name}: {'enabled' if flag.enabled else 'disabled'}")
+```
+
+:::note
+The method is `is_()` (with trailing underscore) because `is` is a reserved keyword in Python.
+:::
+
+## Error Handling
+
+```python
+# API failures fall back to cached values automatically
+result = client.is_("feature")
+
+# Unknown flags return disabled
+result = client.is_("non-existent")
+assert not result.enabled()
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/python/configuration/)
+- [Caching strategies](/sdks/python/caching/)
