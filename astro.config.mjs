@@ -11,9 +11,13 @@ export default defineConfig({
         alt: "Flags.gg Logo",
       },
       favicon: "/favicon.ico",
-      social: {
-        github: "https://github.com/flags-gg",
-      },
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/flags-gg",
+        },
+      ],
       editLink: {
         baseUrl: "https://github.com/flags-gg/documentation/edit/main/",
       },
