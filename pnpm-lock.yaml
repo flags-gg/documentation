@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@astrojs/node':
-        specifier: ^9.5.2
-        version: 9.5.2(astro@5.17.1(rollup@4.57.1)(typescript@5.9.3))
+        specifier: ^9.5.3
+        version: 9.5.3(astro@5.17.1(rollup@4.57.1)(typescript@5.9.3))
       '@astrojs/starlight':
         specifier: ^0.37.6
         version: 0.37.6(astro@5.17.1(rollup@4.57.1)(typescript@5.9.3))
@@ -38,8 +38,8 @@ packages:
     peerDependencies:
       astro: ^5.0.0
 
-  '@astrojs/node@9.5.2':
-    resolution: {integrity: sha512-85/x+FRwbNGDip1TzSGMiak31/6LvBhA8auqd9lLoHaM5XElk+uIfIr3KjJqucDojE0PtiLk1lMSwD9gd3YlGg==}
+  '@astrojs/node@9.5.3':
+    resolution: {integrity: sha512-72jrSn0XtrD7COJVO6TxJmyU1yXdYK7MDdN/+fhqhf4YOhxuIPHclkXrJs8FbLCMx5ur56d/1ijX4XBeneqyXQ==}
     peerDependencies:
       astro: ^5.14.3
 
@@ -1929,7 +1929,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/node@9.5.2(astro@5.17.1(rollup@4.57.1)(typescript@5.9.3))':
+  '@astrojs/node@9.5.3(astro@5.17.1(rollup@4.57.1)(typescript@5.9.3))':
     dependencies:
       '@astrojs/internal-helpers': 0.7.5
       astro: 5.17.1(rollup@4.57.1)(typescript@5.9.3)
