@@ -24,19 +24,20 @@ import VersionBadge from "../../../components/VersionBadge.astro";
 | [Swift](/sdks/swift/) | <VersionBadge sdk="swift" /> | `flags-gg/swift` |
 | [Kotlin](/sdks/kotlin/) | <VersionBadge sdk="kotlin" /> | `gg.flags:flags-kotlin` |
 | [Ruby](/sdks/ruby/) | <VersionBadge sdk="ruby" /> | `flags-gem` |
+| [Elixir](/sdks/elixir/) | <VersionBadge sdk="elixir" /> | `flags_gg` |
 
 ## Feature Comparison
 
-| Feature | Go | Rust | Python | PHP | C# | Swift | Kotlin | Ruby | React | Next.js |
-|---|---|---|---|---|---|---|---|---|---|---|
-| SQLite cache | Yes | — | Yes | Yes | Yes | — | Yes | — | — | — |
-| Memory cache | Yes | Yes | Yes | — | Yes | Yes | Yes | Yes | Yes | Yes |
-| Redis cache | — | — | — | Yes | — | — | — | — | — | — |
-| Circuit breaker | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
-| Env overrides | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
-| Async support | Yes | Yes | — | — | Yes | Yes | Yes | — | Yes | Yes |
-| Batch operations | — | Yes | — | — | — | Yes | — | — | — | — |
-| Secret menu | — | — | — | — | — | — | — | — | Yes | Yes |
+| Feature | Go | Rust | Python | PHP | C# | Swift | Kotlin | Ruby | Elixir | React | Next.js |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| SQLite cache | Yes | — | Yes | Yes | Yes | — | Yes | — | — | — | — |
+| Memory cache | Yes | Yes | Yes | — | Yes | Yes | Yes | Yes | Yes (ETS) | Yes | Yes |
+| Redis cache | — | — | — | Yes | — | — | — | — | — | — | — |
+| Circuit breaker | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
+| Env overrides | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes | — | — |
+| Async support | Yes | Yes | — | — | Yes | Yes | Yes | — | Yes | Yes | Yes |
+| Batch operations | Yes | Yes | — | — | — | Yes | — | — | Yes | — | — |
+| Secret menu | — | — | — | — | — | — | — | — | — | Yes | Yes |
 
 ## Common API Pattern
 

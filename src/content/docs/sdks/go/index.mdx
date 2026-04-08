@@ -51,6 +51,37 @@ for _, flag := range allFlags {
 }
 ```
 
+## Batch Operations
+
+Check several flags in a single call:
+
+```go
+// Returns map[string]bool of flag name to enabled status
+results := client.GetMultiple("feature-1", "feature-2", "feature-3")
+
+// Returns true only if every named flag is enabled
+if client.AllEnabled("feature-1", "feature-2") {
+    fmt.Println("All features enabled")
+}
+
+// Returns true if any named flag is enabled
+if client.AnyEnabled("premium", "beta") {
+    fmt.Println("At least one feature enabled")
+}
+```
+
+## Background Refresh
+
+Opt in to background refresh so flag lookups never block on the network. Always call `Close()` to stop the goroutine when the client is no longer needed:
+
+```go
+client := flags.NewClient(
+    flags.WithAuth(auth),
+    flags.WithBackgroundRefresh(),
+)
+defer client.Close()
+```
+
 ## Next Steps
 
 - [Configuration options](/sdks/go/configuration/)

@@ -1,0 +1,83 @@
+---
+title: Elixir SDK
+description: Get started with Flags.gg in Elixir.
+---
+
+import VersionBadge from "../../../../components/VersionBadge.astro";
+
+<VersionBadge sdk="elixir" />
+
+## Installation
+
+Add `flags_gg` to your `mix.exs` dependencies:
+
+```elixir
+defp deps do
+  [
+    {:flags_gg, "~> 0.1"}
+  ]
+end
+```
+
+Then fetch dependencies:
+
+```bash
+mix deps.get
+```
+
+## Quick Start
+
+The SDK is built on a `GenServer`. Add it to your application's supervision tree so the cache and background refresh start with your app:
+
+```elixir
+# lib/my_app/application.ex
+def start(_type, _args) do
+  children = [
+    {FlagsGG,
+      project_id: "your-project-id",
+      agent_id: "your-agent-id",
+      environment_id: "your-environment-id"}
+  ]
+
+  Supervisor.start_link(children, strategy: :one_for_one, name: MyApp.Supervisor)
+end
+```
+
+Then check flags anywhere in your app:
+
+```elixir
+if FlagsGG.enabled?("new-feature") do
+  IO.puts("Feature is enabled!")
+end
+
+# Get the full flag struct
+flag = FlagsGG.is("new-feature")
+flag.enabled
+
+# List all cached flags
+for flag <- FlagsGG.list() do
+  IO.puts("#{flag.name}: #{flag.enabled}")
+end
+```
+
+## Batch Operations
+
+```elixir
+# Returns %{name => enabled?} for the named flags
+results = FlagsGG.get_multiple(["feature-1", "feature-2"])
+
+# True only if every named flag is enabled
+if FlagsGG.all_enabled?(["feature-1", "feature-2"]) do
+  IO.puts("All enabled")
+end
+
+# True if any named flag is enabled
+if FlagsGG.any_enabled?(["premium", "beta"]) do
+  IO.puts("At least one enabled")
+end
+```
+
+## Next Steps
+
+- [Configuration options](/sdks/elixir/configuration/)
+- [Supervision and OTP](/sdks/elixir/supervision/)

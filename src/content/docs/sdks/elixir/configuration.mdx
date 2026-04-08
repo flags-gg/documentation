@@ -1,0 +1,80 @@
+---
+title: Elixir Configuration
+description: Configuration options for the Elixir SDK.
+---
+
+## Child Spec Options
+
+`FlagsGG` is started as a child of your supervision tree. All options are passed as a keyword list:
+
+```elixir
+children = [
+  {FlagsGG,
+    project_id: "your-project-id",
+    agent_id: "your-agent-id",
+    environment_id: "your-environment-id",
+    base_url: "https://custom-api.flags.gg",
+    max_retries: 5,
+    refresh_interval: 30,
+    http_timeout: 10_000}
+]
+```
+
+## Options Reference
+
+| Option | Default | Description |
+|---|---|---|
+| `:project_id` | — | **Required.** Project identifier |
+| `:agent_id` | — | **Required.** Agent identifier |
+| `:environment_id` | — | **Required.** Environment identifier |
+| `:base_url` | `"https://api.flags.gg"` | Custom API endpoint |
+| `:max_retries` | `3` | Max retry attempts on failure |
+| `:refresh_interval` | `60` | Background refresh interval (seconds) |
+| `:http_timeout` | `10_000` | HTTP request timeout (milliseconds) |
+| `:name` | `FlagsGG.Client` | GenServer name — useful for running multiple clients |
+
+## Public API
+
+| Function | Description |
+|---|---|
+| `FlagsGG.enabled?(name)` | Returns `true` if the flag is enabled |
+| `FlagsGG.is(name)` | Returns the `%FlagsGG.Flag{}` struct |
+| `FlagsGG.list/0` | Returns all cached flags |
+| `FlagsGG.get_multiple(names)` | Returns `%{name => enabled?}` |
+| `FlagsGG.all_enabled?(names)` | True if every named flag is enabled |
+| `FlagsGG.any_enabled?(names)` | True if any named flag is enabled |
+
+Each function accepts an optional `server` argument so you can address a non-default GenServer name.
+
+## Multiple Clients
+
+If you need to talk to more than one project from the same app, give each client a unique `:name`:
+
+```elixir
+children = [
+  Supervisor.child_spec(
+    {FlagsGG, project_id: "p1", agent_id: "a1", environment_id: "e1", name: :flags_primary},
+    id: :flags_primary
+  ),
+  Supervisor.child_spec(
+    {FlagsGG, project_id: "p2", agent_id: "a2", environment_id: "e2", name: :flags_secondary},
+    id: :flags_secondary
+  )
+]
+```
+
+Then address them explicitly:
+
+```elixir
+FlagsGG.enabled?("my-feature", :flags_primary)
+FlagsGG.enabled?("my-feature", :flags_secondary)
+```
+
+## Error Handling
+
+The client gracefully degrades when the API is unavailable:
+
+- Failed refreshes fall back to the last cached value
+- Unknown flags return `false`
+- The circuit breaker opens after consecutive failures and probes for recovery
+- Background refresh errors are logged via `Logger`
