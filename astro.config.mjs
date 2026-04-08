@@ -139,6 +139,14 @@ export default defineConfig({
                 { label: "Caching", slug: "sdks/ruby/caching" },
               ],
             },
+            {
+              label: "Elixir",
+              items: [
+                { label: "Quickstart", slug: "sdks/elixir" },
+                { label: "Configuration", slug: "sdks/elixir/configuration" },
+                { label: "Supervision", slug: "sdks/elixir/supervision" },
+              ],
+            },
           ],
         },
         {

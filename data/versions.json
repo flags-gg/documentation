@@ -49,11 +49,19 @@
   },
   "kotlin": {
     "name": "Kotlin",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "packageName": "gg.flags:flags-kotlin",
-    "installCommand": "implementation(\"gg.flags:flags-kotlin:1.0.0\")",
+    "installCommand": "implementation(\"gg.flags:flags-kotlin:1.1.0\")",
     "registryUrl": "https://central.sonatype.com/artifact/gg.flags/flags-kotlin",
     "repoUrl": "https://github.com/flags-gg/flags-kotlin"
+  },
+  "elixir": {
+    "name": "Elixir",
+    "version": "0.1.0",
+    "packageName": "flags_gg",
+    "installCommand": "{:flags_gg, \"~> 0.1\"}",
+    "registryUrl": "https://hex.pm/packages/flags_gg",
+    "repoUrl": "https://github.com/flags-gg/flags-elixir"
   },
   "ruby": {
     "name": "Ruby",
