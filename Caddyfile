@@ -1,4 +1,48 @@
-:80 {
-    root * /srv
-    file_server
-  }
+# Used by Railway (Railpack) to serve the static Astro build: Railpack picks up
+# a root Caddyfile for static Astro sites. Based on Railpack's default template.
+{
+	admin off
+	persist_config off
+	auto_https off
+
+	log {
+		format json
+	}
+
+	servers {
+		trusted_proxies static private_ranges 100.0.0.0/8 # trust railway's proxy
+	}
+}
+
+:{$PORT:80} {
+	log {
+		format json
+	}
+
+	respond /health 200
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		# ponytail: frame-ancestors only; a full CSP needs hashes for Starlight's inline scripts
+		Content-Security-Policy "frame-ancestors 'none'"
+		-Server
+	}
+
+	root * /app/dist
+
+	encode zstd gzip
+
+	try_files {path} {path}.html {path}/index.html
+	file_server {
+		hide .git
+		hide .env*
+	}
+
+	handle_errors 404 {
+		rewrite * /404.html
+		file_server
+	}
+}
