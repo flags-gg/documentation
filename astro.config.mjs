@@ -1,12 +1,9 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import node from "@astrojs/node";
 
 export default defineConfig({
   site: "https://docs.flags.gg",
-  output: "server",
-  adapter: node({ mode: "standalone" }),
-  server: { host: "0.0.0.0" },
+  output: "static",
   integrations: [
     starlight({
       title: "Flags.gg",
