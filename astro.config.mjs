@@ -3,7 +3,6 @@ import starlight from "@astrojs/starlight";
 
 export default defineConfig({
   site: "https://docs.flags.gg",
-  output: "static",
   integrations: [
     starlight({
       title: "Flags.gg",
@@ -134,14 +133,6 @@ export default defineConfig({
                 { label: "Quickstart", slug: "sdks/ruby" },
                 { label: "Configuration", slug: "sdks/ruby/configuration" },
                 { label: "Caching", slug: "sdks/ruby/caching" },
-              ],
-            },
-            {
-              label: "Elixir",
-              items: [
-                { label: "Quickstart", slug: "sdks/elixir" },
-                { label: "Configuration", slug: "sdks/elixir/configuration" },
-                { label: "Supervision", slug: "sdks/elixir/supervision" },
               ],
             },
           ],
