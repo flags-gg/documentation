@@ -1,0 +1,16 @@
+# Builder
+FROM oven/bun:1.4.2-alpine AS builder
+WORKDIR /app
+
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+COPY . .
+RUN bun run build
+
+# Runner
+FROM caddy:2-alpine AS runner
+
+COPY --from=builder /app/dist /srv
+COPY ./Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80

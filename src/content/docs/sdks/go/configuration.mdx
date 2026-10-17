@@ -29,6 +29,19 @@ client := flags.NewClient(
 | `WithMaxRetries(int)` | `3` | Max retry attempts on failure |
 | `WithMemory()` | SQLite | Use in-memory cache instead of SQLite |
 | `SetFileName(*string)` | `/tmp/flags.db` | Custom SQLite database path |
+| `WithBackgroundRefresh()` | off | Refresh flags asynchronously in a goroutine instead of inline on each lookup |
+| `WithErrorHandler(func(error))` | — | Callback invoked whenever a refresh or fetch error occurs |
+
+## Client Methods
+
+| Method | Description |
+|---|---|
+| `Is(name string) *Flag` | Get a flag wrapper, then call `.Enabled()` |
+| `List() ([]FeatureFlag, error)` | Return all cached flags |
+| `GetMultiple(names ...string) map[string]bool` | Look up several flags in one call |
+| `AllEnabled(names ...string) bool` | True if every named flag is enabled |
+| `AnyEnabled(names ...string) bool` | True if any named flag is enabled |
+| `Close()` | Stop the background refresh goroutine and wait for it to exit |
 
 ## Thread Safety
 
@@ -41,3 +54,4 @@ The client handles errors gracefully:
 - API failures fall back to cached values
 - Unknown flags return `false` (disabled)
 - The circuit breaker prevents cascading failures after 3 consecutive errors
+- Errors during background refresh are reported via `WithErrorHandler` if configured

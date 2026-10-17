@@ -1,5 +1,4 @@
-# Used by Railway (Railpack) to serve the static Astro build: Railpack picks up
-# a root Caddyfile for static Astro sites. Based on Railpack's default template.
+# Serves the static Astro build in the Dockerfile's Caddy stage (Railway and local compose).
 {
 	admin off
 	persist_config off
@@ -31,7 +30,7 @@
 		-Server
 	}
 
-	root * /app/dist
+	root * /srv
 
 	encode zstd gzip
 

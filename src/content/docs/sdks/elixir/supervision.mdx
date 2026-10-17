@@ -1,0 +1,73 @@
+---
+title: Supervision and OTP
+description: How the Elixir SDK fits into an OTP supervision tree.
+---
+
+## GenServer Architecture
+
+`FlagsGG.Client` is a `GenServer` that owns:
+
+- An ETS table for the flag cache
+- A circuit breaker for API failure tracking
+- A background refresh loop driven by the API's `intervalAllowed` value
+
+By starting it under your application's supervisor, OTP restarts the client automatically if it crashes — your flag cache rebuilds on the next refresh.
+
+## Adding to Your Supervision Tree
+
+```elixir
+# lib/my_app/application.ex
+defmodule MyApp.Application do
+  use Application
+
+  def start(_type, _args) do
+    children = [
+      MyApp.Repo,
+      {FlagsGG,
+        project_id: "your-project-id",
+        agent_id: "your-agent-id",
+        environment_id: "your-environment-id"},
+      MyAppWeb.Endpoint
+    ]
+
+    opts = [strategy: :one_for_one, name: MyApp.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+
+## Phoenix Integration
+
+In a Phoenix controller or LiveView, just call `FlagsGG.enabled?/1`:
+
+```elixir
+defmodule MyAppWeb.PageController do
+  use MyAppWeb, :controller
+
+  def index(conn, _params) do
+    if FlagsGG.enabled?("new-homepage") do
+      render(conn, :new_home)
+    else
+      render(conn, :home)
+    end
+  end
+end
+```
+
+```elixir
+defmodule MyAppWeb.DashboardLive do
+  use MyAppWeb, :live_view
+
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, beta?: FlagsGG.enabled?("beta-dashboard"))}
+  end
+end
+```
+
+## Concurrent Access
+
+The cache is backed by ETS with `:read_concurrency` enabled, so flag lookups from many processes do not contend on the GenServer. Lookups are resolved directly against ETS — only refreshes go through the GenServer.
+
+## Releases
+
+When building releases with `mix release`, no extra configuration is needed. The supervisor and child spec are picked up the same way as in development.

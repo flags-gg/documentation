@@ -33,7 +33,7 @@ Returns a flag object with the following methods:
 |---|---|---|
 | `enabled()` | `boolean` | Returns `true` if the flag is enabled |
 | `disabled()` | `boolean` | Returns `true` if the flag is disabled |
-| `initalize(defaultValue: boolean)` | `void` | Creates a local-only flag with the given default |
+| `initialize(defaultValue: boolean)` | `void` | Creates a local-only flag with the given default |
 
 ### `toggle(flagName: string)`
 
@@ -72,7 +72,7 @@ return <BetaFeature />;
 const { is } = useFlags();
 
 // Create a local flag with a default value
-is("debug-panel").initalize(false);
+is("debug-panel").initialize(false);
 
 return (
   <div>
