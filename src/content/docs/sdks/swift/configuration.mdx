@@ -28,6 +28,24 @@ let client = try Flags.builder()
 | `withBaseURL(String)` | `https://api.flags.gg` | Custom API endpoint |
 | `withMaxRetries(Int)` | `3` | Max retry attempts |
 | `withErrorCallback((FlagsError) -> Void)` | — | Error callback handler |
+| `withTargetingKey(String?)` | Install id | Stable user id for [percentage rollouts](/concepts/rollouts-and-rules/) |
+| `withContext([String: [String]])` | — | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules). A `[String: String]` overload is also available |
+
+## Rollouts and Targeting Rules
+
+```swift
+let client = try FlagsClient.builder()
+    .withAuth(auth)
+    .withTargetingKey(user?.id) // nil falls back to the install id
+    .withContext(["email": [user.email], "plan": [user.plan], "groups": user.groups])
+    .build()
+
+// later, e.g. after login or an upgrade; re-fetches flags
+await client.setTargetingKey(user.id)
+await client.setContext(["plan": ["pro"]])
+```
+
+`isEnabled` already accounts for both. See [Rollouts & Targeting Rules](/concepts/rollouts-and-rules/).
 
 ## Error Types
 

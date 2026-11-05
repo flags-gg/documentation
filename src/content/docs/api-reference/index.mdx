@@ -19,6 +19,13 @@ All requests must include these headers:
 | `X-AGENT-ID` | Your agent identifier |
 | `X-ENVIRONMENT-ID` | Your environment identifier |
 
+Optional headers for [rollouts and targeting rules](/concepts/rollouts-and-rules/):
+
+| Header | Description |
+|---|---|
+| `X-Flags-Capabilities` | `rollout` if the client evaluates percentage rollouts itself. Without it, partially rolled-out flags are returned disabled. |
+| `X-Flags-Context` | Base64 (URL-safe or standard) JSON object describing the user. `key` is the targeting key; other attributes are strings or lists of strings, e.g. `{"key":"user-1","plan":"pro","groups":["beta"]}`. Used to evaluate rules. Max 8 KB. |
+
 ## Endpoints
 
 ### GET /flags
@@ -36,7 +43,8 @@ Fetch all feature flags for the authenticated agent and environment.
       "details": {
         "id": "flag-uuid",
         "name": "my-feature"
-      }
+      },
+      "rollout": 25
     }
   ]
 }
@@ -49,6 +57,7 @@ Fetch all feature flags for the authenticated agent and environment.
 | `flags[].enabled` | `boolean` | Whether the flag is enabled |
 | `flags[].details.id` | `string` | Unique flag identifier |
 | `flags[].details.name` | `string` | Human-readable flag name |
+| `flags[].rollout` | `integer` | Percentage (0–99) of users who see the flag. Omitted means 100%, or that a targeting rule already decided `enabled`. Only sent with `X-Flags-Capabilities: rollout`. |
 
 ## SDK Usage
 

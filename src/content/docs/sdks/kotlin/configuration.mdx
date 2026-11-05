@@ -32,6 +32,30 @@ val client = FlagsClient.builder()
 | `withMemoryCache()` | SQLite | Use in-memory cache |
 | `withSQLiteCache(String)` | `flags.db` | Custom SQLite path |
 | `httpClient(HttpClient)` | — | Custom Ktor HTTP client |
+| `targetingKey(String?)` | — | Stable user id for [percentage rollouts](/concepts/rollouts-and-rules/). Without one, partial rollouts stay off |
+| `context(Map<String, Any>)` | — | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules). Values are strings or lists of strings |
+
+## Rollouts and Targeting Rules
+
+On Android, use your signed-in user's id or a per-install id:
+
+```kotlin
+val prefs = context.getSharedPreferences("flags", Context.MODE_PRIVATE)
+val installId = prefs.getString("install_id", null)
+    ?: UUID.randomUUID().toString().also { prefs.edit().putString("install_id", it).apply() }
+
+val client = FlagsClient.builder()
+    .auth(auth)
+    .targetingKey(user?.id ?: installId)
+    .context(mapOf("email" to user.email, "plan" to user.plan, "groups" to user.groups))
+    .build()
+
+// later, e.g. after login or an upgrade; re-fetches flags
+client.setTargetingKey(user.id)
+client.setContext(mapOf("plan" to "pro"))
+```
+
+`isEnabled` already accounts for both. See [Rollouts & Targeting Rules](/concepts/rollouts-and-rules/).
 
 ## Go-Style Options
 

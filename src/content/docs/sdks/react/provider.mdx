@@ -36,6 +36,17 @@ function App() {
 | `environmentId` | `string` | Yes | Your environment ID |
 | `flagsURL` | `string` | No | Custom API endpoint (defaults to `https://api.flags.gg/flags`) |
 | `enableLogs` | `boolean` | No | Enable debug logging |
+| `targetingKey` | `string` | No | Stable user id for [percentage rollouts](/concepts/rollouts-and-rules/). Defaults to a random id stored in `localStorage` |
+| `context` | `object` | No | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules), e.g. `{ email, plan, groups }` |
+
+### Rollouts and targeting rules
+
+```jsx
+<FlagsProvider options={{ projectId, agentId, environmentId, targetingKey: user.id,
+  context: { email: user.email, plan: user.plan, groups: user.groups } }}>
+```
+
+`is("flag").enabled()` already accounts for both. If storage is blocked and there's no `targetingKey`, partially rolled-out flags stay off. See [Rollouts & Targeting Rules](/concepts/rollouts-and-rules/).
 
 ## How It Works
 

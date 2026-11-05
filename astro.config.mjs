@@ -40,6 +40,10 @@ export default defineConfig({
               label: "Environment Overrides",
               slug: "concepts/environment-overrides",
             },
+            {
+              label: "Rollouts & Targeting Rules",
+              slug: "concepts/rollouts-and-rules",
+            },
           ],
         },
         {

@@ -1,0 +1,82 @@
+---
+title: Rollouts & Targeting Rules
+description: Roll a flag out to a percentage of users, or target specific users, groups and segments.
+---
+
+## Overview
+
+An enabled flag doesn't have to be on for everyone. Per environment, you can:
+
+- **Roll it out to a percentage** of users, e.g. 10%, then raise it as you gain confidence.
+- **Target it with rules**, e.g. on for `email ends with @acme.com`, off for `plan in free`.
+
+Both are set in the dashboard. A disabled flag is always off, whatever its rollout or rules.
+
+:::note[SDK support]
+Rollouts and rules are supported by the [React](/sdks/react/provider/), [Swift](/sdks/swift/configuration/) and [Kotlin](/sdks/kotlin/configuration/) SDKs. Older SDKs get partially rolled-out flags as **off**, so they never show a 10% feature to everyone.
+:::
+
+## How a flag is decided
+
+For each user, in order:
+
+1. Flag disabled → **off**.
+2. First matching rule → that rule's result (**on** or **off**).
+3. No rule matches → the **percentage rollout** applies.
+
+## Percentage rollouts
+
+Each user is placed in a bucket from 0 to 99 per flag. They see the flag when their bucket is below the rollout percentage. The bucket is:
+
+```
+FNV-1a 32-bit("<flag name>:<targeting key>") % 100
+```
+
+The API and every SDK compute exactly this, so a user gets the same answer everywhere, and raising the percentage only ever adds users.
+
+### Targeting key
+
+The targeting key identifies the user. Use something stable, such as your user id. If there's no targeting key, partial rollouts (1–99%) stay **off**. 0% and 100% don't need one.
+
+| SDK | Default targeting key |
+|---|---|
+| React | Random id stored in `localStorage["flagsgg:visitor"]` |
+| Swift | Random install id stored in `UserDefaults` |
+| Kotlin | None, so pass one (e.g. a user id or per-install id) |
+
+Pass your own key to keep a user's answer the same across browsers and devices.
+
+## Targeting rules
+
+A rule matches on one attribute of the user's **context**, which is what your app tells the SDK about the user:
+
+```json
+{ "email": "ana@acme.com", "plan": "pro", "groups": ["beta", "staff"] }
+```
+
+Attributes are strings or lists of strings. Rules are checked in order, and the first match decides the flag.
+
+| Operator | Matches when the attribute… |
+|---|---|
+| `in` | equals any of the values |
+| `not_in` | equals none of the values |
+| `contains` | contains any of the values |
+| `starts_with` | starts with any of the values |
+| `ends_with` | ends with any of the values |
+
+- Matching ignores case.
+- For list attributes (e.g. `groups`), a rule matches if **any** item matches.
+- A user **without** the attribute never matches a rule, including `not_in`.
+
+### Rules stay on the server
+
+The SDK sends the context, the server evaluates the rules and returns only the result. Rule values, such as your list of beta customers, never reach the browser or the device.
+
+Because rules are evaluated when flags are fetched, update the context (e.g. after login or an upgrade) through the SDK's `setContext` so flags are fetched again.
+
+### Limits
+
+- Up to 50 rules per flag.
+- Attribute names up to 100 characters.
+- 1–1000 values per rule, each up to 500 characters.
+- The encoded context sent by the SDK can be up to 8 KB.
