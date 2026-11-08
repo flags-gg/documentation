@@ -65,6 +65,16 @@ suspend fun main() {
 }
 ```
 
+## Batch Operations
+
+```kotlin
+val states = client.getMultiple(listOf("feature-a", "feature-b")) // Map<String, Boolean>
+val all = client.allEnabled(listOf("feature-a", "feature-b"))
+val any = client.anyEnabled(listOf("feature-a", "feature-b"))
+```
+
+Flag names are case-insensitive.
+
 ## Go-Style API
 
 An alternative API style is also available:

@@ -29,11 +29,11 @@ val client = FlagsClient.builder()
 | `maxRetries(Int)` | `3` | Max retry attempts |
 | `failureThreshold(Int)` | `3` | Circuit breaker failure threshold |
 | `resetTimeout(Duration)` | `10 seconds` | Circuit breaker reset timeout |
-| `withMemoryCache()` | SQLite | Use in-memory cache |
-| `withSQLiteCache(String)` | `flags.db` | Custom SQLite path |
+| `withMemoryCache()` | Memory | Use in-memory cache |
+| `withSQLiteCache(String)` | `flags_cache.db` | Use a SQLite cache, so the last values survive a restart |
 | `httpClient(HttpClient)` | — | Custom Ktor HTTP client |
 | `targetingKey(String?)` | — | Stable user id for [percentage rollouts](/concepts/rollouts-and-rules/). Without one, partial rollouts stay off |
-| `context(Map<String, Any>)` | — | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules). Values are strings or lists of strings |
+| `context(Map<String, String>)` / `context(Map<String, List<String>>)` | — | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules) |
 
 ## Rollouts and Targeting Rules
 
@@ -47,7 +47,7 @@ val installId = prefs.getString("install_id", null)
 val client = FlagsClient.builder()
     .auth(auth)
     .targetingKey(user?.id ?: installId)
-    .context(mapOf("email" to user.email, "plan" to user.plan, "groups" to user.groups))
+    .context(mapOf("email" to listOf(user.email), "plan" to listOf(user.plan), "groups" to user.groups))
     .build()
 
 // later, e.g. after login or an upgrade; re-fetches flags

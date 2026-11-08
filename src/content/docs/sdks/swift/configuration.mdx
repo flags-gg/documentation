@@ -29,6 +29,9 @@ let client = try Flags.builder()
 | `withMaxRetries(Int)` | `3` | Max retry attempts |
 | `withErrorCallback((FlagsError) -> Void)` | — | Error callback handler |
 | `withTargetingKey(String?)` | Install id | Stable user id for [percentage rollouts](/concepts/rollouts-and-rules/) |
+| `withMemoryCache()` | Memory | Use in-memory cache |
+| `withSQLiteCache(path:)` | `flags_cache.db` | Use a SQLite cache, so the last values survive a restart (Apple platforms) |
+| `withCache(any Cache)` | — | Use your own cache |
 | `withContext([String: [String]])` | — | User attributes for [targeting rules](/concepts/rollouts-and-rules/#targeting-rules). A `[String: String]` overload is also available |
 
 ## Rollouts and Targeting Rules
